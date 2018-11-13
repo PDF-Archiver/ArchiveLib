@@ -8,7 +8,7 @@
 import Foundation
 
 struct Tag {
-    
+
     let name: String
     var count: Int
 }

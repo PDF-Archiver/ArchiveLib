@@ -1,5 +1,5 @@
-import XCTest
 @testable import ArchiveLib
+import XCTest
 
 final class ArchiveLibTests: XCTestCase {
     func testExample() {
@@ -10,6 +10,6 @@ final class ArchiveLibTests: XCTestCase {
     }
 
     static var allTests = [
-        ("testExample", testExample),
+        ("testExample", testExample)
     ]
 }

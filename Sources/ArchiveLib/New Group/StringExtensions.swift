@@ -8,7 +8,7 @@
 import Foundation
 
 extension String {
-    
+
     func slugify(withSeparator separator: String = "-") -> String {
         // this function is inspired by:
         // https://github.com/malt03/SwiftString/blob/0aeb47cbfa77cf8552bbadf49360ef529fbb8c03/Sources/StringExtensions.swift#L194
@@ -25,7 +25,7 @@ extension String {
             .filter { !$0.isEmpty }
             .joined(separator: separator)
     }
-    
+
     func capturedGroups(withRegex pattern: String) -> [String]? {
         // this function is inspired by:
         // https://gist.github.com/unshapedesign/1b95f78d7f74241f706f346aed5384ff
@@ -39,12 +39,12 @@ extension String {
         let matches = regex.matches(in: self,
                                     options: [],
                                     range: NSRange(location: 0, length: count))
-        
+
         guard let match = matches.first else { return nil }
-        
+
         let lastRangeIndex = match.numberOfRanges - 1
         guard lastRangeIndex >= 1 else { return nil }
-        
+
         var results = [String]()
         for idx in 1...lastRangeIndex {
             let capturedGroupIndex = match.range(at: idx)
@@ -53,7 +53,7 @@ extension String {
         }
         return results
     }
-    
+
     func capitalizingFirstLetter() -> String {
         return prefix(1).uppercased() + dropFirst()
     }
