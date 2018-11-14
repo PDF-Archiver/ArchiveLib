@@ -1,0 +1,11 @@
+//
+//  SearchTests.swift
+//  ArchiveLibTests
+//
+//  Created by Julian Kahnert on 14.11.18.
+//
+
+SWIFT_VERSION = 4.2
+
+IPHONEOS_DEPLOYMENT_TARGET = 11.0
+MACOSX_DEPLOYMENT_TARGET = 10.12
