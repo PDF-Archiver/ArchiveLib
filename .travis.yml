@@ -1,0 +1,6 @@
+language: swift
+os: osx
+osx_image: xcode10.1
+script:
+    - swiftlint
+    - swift test -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx10.12"

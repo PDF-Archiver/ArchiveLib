@@ -24,5 +24,6 @@ let package = Package(
         .testTarget(
             name: "ArchiveLibTests",
             dependencies: ["ArchiveLib"])
-    ]
+    ],
+    swiftLanguageVersions: [SwiftVersion.v4_2]
 )
