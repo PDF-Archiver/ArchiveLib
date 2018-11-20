@@ -32,38 +32,36 @@ class TestSearcher: Searcher {
 class SearchTests: XCTestCase {
 
     func testSearch1() {
-        
+
         // prepare
         let element1 = TestElement(filename: "2018 05 12 kitchen table bill ikea")
         let element2 = TestElement(filename: "2018 01 07 tom tailor shirt bill")
-        
+
         let index = TestSearcher()
         index.allSearchElements.insert(element1)
         index.allSearchElements.insert(element2)
-        
+
         // act
         let foundElements = index.filterBy("bill")
-        
-        
+
         // assert
         XCTAssertTrue(foundElements.contains(element1))
         XCTAssertTrue(foundElements.contains(element2))
     }
-    
+
     func testSearch2() {
-        
+
         // prepare
         let element1 = TestElement(filename: "2018 05 12 kitchen table bill ikea")
         let element2 = TestElement(filename: "2018 01 07 tom tailor shirt bill")
-        
+
         let index = TestSearcher()
         index.allSearchElements.insert(element1)
         index.allSearchElements.insert(element2)
-        
+
         // act
         let foundElements = index.filterBy(["shirt", "bill"])
-        
-        
+
         // assert
         XCTAssertFalse(foundElements.contains(element1))
         XCTAssertTrue(foundElements.contains(element2))

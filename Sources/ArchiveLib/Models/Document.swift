@@ -25,45 +25,47 @@ struct Document: Logging {
     private(set) var folder: String
     private(set) var filename: String
     private(set) var path: URL
-    private(set) var size: String
 
-    var downloadStatus: DownloadStatus
+    private(set) var size: String?
+    var downloadStatus: DownloadStatus?
 
-    init(path documentPath: URL, size byteSize: Int64, downloadStatus documentDownloadStatus: DownloadStatus, availableTags: inout Set<Tag>) {
+    init(path documentPath: URL, availableTags: inout Set<Tag>, size byteSize: Int64?, downloadStatus documentDownloadStatus: DownloadStatus?) {
 
         path = documentPath
-        size = ByteCountFormatter.string(fromByteCount: byteSize, countStyle: .file)
-        downloadStatus = documentDownloadStatus
         filename = documentPath.lastPathComponent
         folder = documentPath.deletingLastPathComponent().lastPathComponent
 
-        guard let parts = Document.parseFilename(filename) else { fatalError("Could not parse document filename!") }
+        if let byteSize = byteSize {
+            size = ByteCountFormatter.string(fromByteCount: byteSize, countStyle: .file)
+        }
+        if let documentDownloadStatus = documentDownloadStatus {
+            downloadStatus = documentDownloadStatus
+        }
 
-        // parse the document date
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        guard let documentDate = dateFormatter.date(from: parts[0]) else { fatalError("Could not parse the document date!") }
-        date = documentDate
+        // parse the current filename
+        let parsedFilename = Document.parseFilename(documentPath)
 
-        // parse the document specification
-        specification = parts[1]
-        specificationCapitalized = specification
-            .split(separator: "-")
-            .map { String($0).capitalizingFirstLetter() }
-            .joined(separator: " ")
+        // set the date
+        date = parsedFilename.date ?? Date()
 
-        // parse the document tags
-        for tagname in parts[2].split(separator: "_") {
-
-            if var availableTag = availableTags.first(where: { $0.name == String(tagname) }) {
+        // get the available tags of the archive
+        for documentTagName in parsedFilename.tagNames ?? [] {
+            if var availableTag = availableTags.first(where: { $0.name == documentTagName }) {
                 availableTag.count += 1
                 tags.insert(availableTag)
             } else {
-                let newTag = Tag(name: String(tagname), count: 1)
+                let newTag = Tag(name: documentTagName, count: 1)
                 availableTags.insert(newTag)
                 tags.insert(newTag)
             }
         }
+
+        // set the specification
+        specification = parsedFilename.specification ?? ""
+        specificationCapitalized = specification
+            .split(separator: "-")
+            .map { String($0).capitalizingFirstLetter() }
+            .joined(separator: " ")
     }
 
     mutating func download() {
@@ -75,8 +77,43 @@ struct Document: Logging {
         }
     }
 
-    static func parseFilename(_ filename: String) -> [String]? {
-        return filename.capturedGroups(withRegex: "(\\d{4}-\\d{2}-\\d{2})--(.+)__([\\w\\d_]+)\\.[pdfPDF]{3}$")
+    static func parseFilename(_ path: URL) -> (date: Date?, specification: String?, tagNames: [String]?) {
+
+        // try to parse the current filename
+        let parser = DateParser()
+        var date: Date?
+        var rawDate = ""
+        if let parsed = parser.parse(path.lastPathComponent) {
+            date = parsed.date
+            rawDate = parsed.rawDate
+        }
+
+        // save a first "raw" specification
+        var specification = path.lastPathComponent
+            // drop the already parsed date
+            .dropFirst(rawDate.count)
+            // drop the extension and the last .
+            .dropLast(path.pathExtension.count + 1)
+            // exclude tags, if they exist
+            .components(separatedBy: "__")[0]
+            // clean up all "_" - they are for tag use only!
+            .replacingOccurrences(of: "_", with: "-")
+            // remove a pre or suffix from the string
+            .slugifyPreSuffix()
+
+        // parse the specification and override it, if possible
+        if var raw = path.lastPathComponent.capturedGroups(withRegex: "--([\\w\\d-]+)__") {
+            specification = raw[0]
+        }
+
+        // parse the tags
+        var tagNames: [String]?
+        if var raw = path.lastPathComponent.capturedGroups(withRegex: "__([\\w\\d_]+).[pdfPDF]{3}$") {
+            // parse the tags of a document
+            tagNames = raw[0].components(separatedBy: "_")
+        }
+
+        return (date, specification, tagNames)
     }
 }
 

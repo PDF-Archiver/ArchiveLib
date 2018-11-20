@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		A352A11A21A481AF001DEAC7 /* DateParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A352A11921A481AF001DEAC7 /* DateParser.swift */; };
 		OBJ_34 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* Document.swift */; };
 		OBJ_35 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* Tag.swift */; };
 		OBJ_36 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* Logging.swift */; };
@@ -49,6 +50,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A352A11921A481AF001DEAC7 /* DateParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateParser.swift; sourceTree = "<group>"; };
 		"ArchiveLib::ArchiveLib::Product" /* ArchiveLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ArchiveLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"ArchiveLib::ArchiveLibTests::Product" /* ArchiveLibTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = ArchiveLibTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_13 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 			children = (
 				OBJ_16 /* Logging.swift */,
 				OBJ_17 /* StringExtensions.swift */,
+				A352A11921A481AF001DEAC7 /* DateParser.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -275,6 +278,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				A352A11A21A481AF001DEAC7 /* DateParser.swift in Sources */,
 				OBJ_34 /* Document.swift in Sources */,
 				OBJ_35 /* Tag.swift in Sources */,
 				OBJ_36 /* Logging.swift in Sources */,
