@@ -8,25 +8,29 @@
 import Foundation
 
 /// Protocol for objects which should be searched.
-protocol Searchable: Hashable {
+public protocol Searchable: Hashable {
 
     /// Term which will be used for the search
     var searchTerm: String { get }
 }
 
 /// Protocol for objects which can search.
-protocol Searcher {
+public protocol Searcher {
+
+    /// Element which will be searched.
     associatedtype Element: Searchable
 
     /// Set of all the searchable elements.
     var allSearchElements: Set<Element> { get }
 
+    // swiftlint:disable missing_docs
     func filterBy(_ searchTerm: String) -> Set<Element>
     func filterBy(_ searchTerms: [String]) -> Set<Element>
+    // swiftlint:enable missing_docs
 }
 
-// MARK: - Implementation of the Searcher functions.
-extension Searcher {
+/// Implementation of the Searcher functions.
+public extension Searcher {
 
     /// Filter the "Searchable" objects by a search term.
     ///

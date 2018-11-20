@@ -8,28 +8,28 @@
 import Foundation
 import os.log
 
-enum DownloadStatus: Equatable {
+public enum DownloadStatus: Equatable {
     case iCloudDrive
     case downloading(percentDownloaded: Float)
     case local
 }
 
-struct Document: Logging {
+public struct Document: Logging {
 
     // data from filename
-    private(set) var date: Date
-    private(set) var specification: String
-    private(set) var specificationCapitalized: String
-    private(set) var tags = Set<Tag>()
+    public private(set) var date: Date
+    public private(set) var specification: String
+    public private(set) var specificationCapitalized: String
+    public private(set) var tags = Set<Tag>()
 
-    private(set) var folder: String
-    private(set) var filename: String
-    private(set) var path: URL
+    public private(set) var folder: String
+    public private(set) var filename: String
+    public private(set) var path: URL
 
-    private(set) var size: String?
-    var downloadStatus: DownloadStatus?
+    public private(set) var size: String?
+    public var downloadStatus: DownloadStatus?
 
-    init(path documentPath: URL, availableTags: inout Set<Tag>, size byteSize: Int64?, downloadStatus documentDownloadStatus: DownloadStatus?) {
+    public init(path documentPath: URL, availableTags: inout Set<Tag>, size byteSize: Int64?, downloadStatus documentDownloadStatus: DownloadStatus?) {
 
         path = documentPath
         filename = documentPath.lastPathComponent
@@ -46,10 +46,10 @@ struct Document: Logging {
         let parsedFilename = Document.parseFilename(documentPath)
 
         // set the date
-        date = parsedFilename.date ?? Date()
+        date = parsedFilename?.date ?? Date()
 
         // get the available tags of the archive
-        for documentTagName in parsedFilename.tagNames ?? [] {
+        for documentTagName in parsedFilename?.tagNames ?? [] {
             if var availableTag = availableTags.first(where: { $0.name == documentTagName }) {
                 availableTag.count += 1
                 tags.insert(availableTag)
@@ -61,23 +61,14 @@ struct Document: Logging {
         }
 
         // set the specification
-        specification = parsedFilename.specification ?? ""
+        specification = parsedFilename?.specification ?? ""
         specificationCapitalized = specification
             .split(separator: "-")
             .map { String($0).capitalizingFirstLetter() }
             .joined(separator: " ")
     }
 
-    mutating func download() {
-        do {
-            try FileManager.default.startDownloadingUbiquitousItem(at: path)
-            downloadStatus = .downloading(percentDownloaded: 0)
-        } catch {
-            os_log("%s", log: log, type: .debug, error.localizedDescription)
-        }
-    }
-
-    static func parseFilename(_ path: URL) -> (date: Date?, specification: String?, tagNames: [String]?) {
+    public static func parseFilename(_ path: URL) -> (date: Date, specification: String, tagNames: [String])? {
 
         // try to parse the current filename
         let parser = DateParser()
@@ -89,7 +80,7 @@ struct Document: Logging {
         }
 
         // save a first "raw" specification
-        var specification = path.lastPathComponent
+        var specification: String? = path.lastPathComponent
             // drop the already parsed date
             .dropFirst(rawDate.count)
             // drop the extension and the last .
@@ -99,7 +90,7 @@ struct Document: Logging {
             // clean up all "_" - they are for tag use only!
             .replacingOccurrences(of: "_", with: "-")
             // remove a pre or suffix from the string
-            .slugifyPreSuffix()
+            .trimmingCharacters(in: ["-"])
 
         // parse the specification and override it, if possible
         if var raw = path.lastPathComponent.capturedGroups(withRegex: "--([\\w\\d-]+)__") {
@@ -113,14 +104,19 @@ struct Document: Logging {
             tagNames = raw[0].components(separatedBy: "_")
         }
 
-        return (date, specification, tagNames)
+        if let date = date,
+            let specification = specification,
+            let tagNames = tagNames {
+
+            return (date, specification, tagNames)
+        } else {
+            return nil
+        }
     }
 }
 
-// MARK: - Extensions -
-
 extension Document: Hashable, Comparable, CustomStringConvertible {
-    static func < (lhs: Document, rhs: Document) -> Bool {
+    public static func < (lhs: Document, rhs: Document) -> Bool {
 
         // first: sort by date
         // second: sort by filename
@@ -130,18 +126,18 @@ extension Document: Hashable, Comparable, CustomStringConvertible {
             return lhs.filename > rhs.filename
         }
     }
-    static func == (lhs: Document, rhs: Document) -> Bool {
+    public static func == (lhs: Document, rhs: Document) -> Bool {
         // "==" and hashValue must only compare the path to avoid duplicates in sets
         return lhs.path == rhs.path
     }
     // "==" and hashValue must only compare the path to avoid duplicates in sets
-    var hashValue: Int { return path.hashValue }
+    public var hashValue: Int { return path.hashValue }
 
-    var description: String { return filename }
+    public var description: String { return filename }
 }
 
 extension Document: Searchable {
 
     // Searchable stubs
-    internal var searchTerm: String { return filename }
+    public var searchTerm: String { return filename }
 }

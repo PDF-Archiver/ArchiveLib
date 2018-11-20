@@ -5,7 +5,7 @@
 //  Created by Julian Kahnert on 14.11.18.
 //
 
-@testable import ArchiveLib
+import ArchiveLib
 import XCTest
 
 class TestElement: Searchable {

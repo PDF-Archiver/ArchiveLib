@@ -7,9 +7,14 @@
 
 import Foundation
 
-extension String {
+/// MARK: Several string helpers.
+public extension String {
 
-    func slugify(withSeparator separator: String = "-") -> String {
+    /// Slugify the string and seperate each part.
+    ///
+    /// - Parameter separator: Character which will be used for the seperation.
+    /// - Returns: Cleaned string.
+    public func slugified(withSeparator separator: String = "-") -> String {
         // this function is inspired by:
         // https://github.com/malt03/SwiftString/blob/0aeb47cbfa77cf8552bbadf49360ef529fbb8c03/Sources/StringExtensions.swift#L194
         let slugCharacterSet = NSCharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\(separator)")
@@ -26,23 +31,11 @@ extension String {
             .joined(separator: separator)
     }
 
-    func slugifyPreSuffix() -> String {
-        // create the regular expression
-        let regex = try? NSRegularExpression(pattern: "\\w.*\\w")
-
-        // get the first match
-        let result = regex?.firstMatch(in: self, range: NSRange(self.startIndex..., in: self))
-
-        // return the slugified string
-        if let result = result,
-            let range = Range(result.range, in: self) {
-            return String(self[range])
-        } else {
-            return ""
-        }
-    }
-
-    func capturedGroups(withRegex pattern: String) -> [String]? {
+    /// Find groups by a given regular expression.
+    ///
+    /// - Parameter pattern: regular expression which captures a group
+    /// - Returns: Array of found groups
+    public func capturedGroups(withRegex pattern: String) -> [String]? {
         // this function is inspired by:
         // https://gist.github.com/unshapedesign/1b95f78d7f74241f706f346aed5384ff
         var regex: NSRegularExpression
@@ -70,7 +63,10 @@ extension String {
         return results
     }
 
-    func capitalizingFirstLetter() -> String {
+    /// Return words with capitalized first letter.
+    ///
+    /// - Returns: Output string.
+    public func capitalizingFirstLetter() -> String {
         return prefix(1).uppercased() + dropFirst()
     }
 }

@@ -8,12 +8,17 @@
 import Foundation
 import os.log
 
-protocol Logging {
+/// Logging protocel
+public protocol Logging {
+
+    /// Property that should be used for generating logs.
     var log: OSLog { get }
 }
 
 extension Logging {
-    internal var log: OSLog {
+
+    /// Getting an OSLog instance for logging.
+    public var log: OSLog {
         return OSLog(subsystem: Bundle.main.bundleIdentifier ?? "ArchiveLib",
                      category: String(describing: type(of: self)))
     }

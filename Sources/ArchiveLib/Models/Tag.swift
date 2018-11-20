@@ -7,16 +7,20 @@
 
 import Foundation
 
-struct Tag {
+/// Structure which represents a Tag.
+public struct Tag {
 
-    let name: String
-    var count: Int
+    /// Name of the tag.
+    public let name: String
+
+    /// Count of how many tags with this name exist.
+    public var count: Int
 }
 
 extension Tag: Hashable, CustomStringConvertible {
-    static func == (lhs: Tag, rhs: Tag) -> Bool {
+    public static func == (lhs: Tag, rhs: Tag) -> Bool {
         return lhs.name == rhs.name
     }
-    var description: String { return "\(name) (\(count))" }
-    var hashValue: Int { return name.hashValue }
+    public var description: String { return "\(name) (\(count))" }
+    public var hashValue: Int { return name.hashValue }
 }
