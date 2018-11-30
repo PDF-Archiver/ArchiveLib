@@ -41,7 +41,24 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       codeCoverageEnabled = "YES"
+      onlyGenerateCoverageForSpecifiedTargets = "YES"
       shouldUseLaunchSchemeArgsEnv = "YES">
+      <CodeCoverageTargets>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A352A18321A491D7001DEAC7"
+            BuildableName = "ArchiveLib.framework"
+            BlueprintName = "ArchiveLib-iOS"
+            ReferencedContainer = "container:ArchiveLib.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "ArchiveLib::ArchiveLib"
+            BuildableName = "ArchiveLib.framework"
+            BlueprintName = "ArchiveLib-macOS"
+            ReferencedContainer = "container:ArchiveLib.xcodeproj">
+         </BuildableReference>
+      </CodeCoverageTargets>
       <Testables>
          <TestableReference
             skipped = "NO">
