@@ -8,33 +8,51 @@
 import Foundation
 import os.log
 
+/// Download status of a file.
+///
+/// - iCloudDrive: The file is currently only in iCloud Drive available.
+/// - downloading: The OS downloads the file currentyl.
+/// - local: The file is locally available.
 public enum DownloadStatus: Equatable {
     case iCloudDrive
     case downloading(percentDownloaded: Float)
     case local
 }
 
+/// Errors which can occur while handling a document.
+///
+/// - description: A error in the description.
+/// - tags: A error in the document tags.
 public enum DocumentError: Error {
     case description
     case tags
 }
 
+/// Main structure which contains a document.
 public struct Document: Logging {
 
-    // ArchiveLib essentials
+    // MARK: ArchiveLib essentials
+    /// Date of the document.
     public var date: Date
+    /// Details of the document, e.g. "blue pullover".
     public var specification: String
+    /// Tags/categories of the document.
     public var tags = Set<Tag>()
 
-    // data from filename
+    // MARK: data from filename
+    /// Name of the folder, e.g. "2018".
     public private(set) var folder: String
+    /// Whole filename, e.g. "scan1.pdf".
     public private(set) var filename: String
+    /// Path to the file.
     public private(set) var path: URL
 
+    /// Size of the document, e.g. "1,5 MB".
     public private(set) var size: String?
+    /// Download status of the document.
     public var downloadStatus: DownloadStatus?
 
-    // helpers
+    /// Details of the document with capitalized first letter, e.g. "Blue Pullover".
     public var specificationCapitalized: String {
         return specification
             .split(separator: " ")
@@ -43,6 +61,13 @@ public struct Document: Logging {
             .joined(separator: " ")
     }
 
+    /// Create a new document, which contains the main information (date, specification, tags) of the ArchiveLib.
+    ///
+    /// - Parameters:
+    ///   - documentPath: Path of the file on disk.
+    ///   - availableTags: Currently available tags in archive.
+    ///   - byteSize: Size of this documen in number of bytes.
+    ///   - documentDownloadStatus: Download status of the document.
     public init(path documentPath: URL, availableTags: inout Set<Tag>, size byteSize: Int64?, downloadStatus documentDownloadStatus: DownloadStatus?) {
 
         path = documentPath
@@ -113,6 +138,10 @@ public struct Document: Logging {
         return (foldername, filename)
     }
 
+    /// Parse the filename from an URL.
+    ///
+    /// - Parameter path: Path which should be parsed.
+    /// - Returns: Date, specification and tag names which can be parsed from the path.
     public static func parseFilename(_ path: URL) -> (date: Date?, specification: String?, tagNames: [String]?) {
 
         // try to parse the current filename
