@@ -26,16 +26,24 @@ public enum DownloadStatus: Equatable {
 public enum DocumentError: Error {
     case description
     case tags
+    case renameFailed
+    case renameFailedFileAlreadyExists
+
 }
 
 /// Main structure which contains a document.
-public struct Document: Logging {
+public class Document: Logging {
 
     // MARK: ArchiveLib essentials
     /// Date of the document.
     public var date: Date
     /// Details of the document, e.g. "blue pullover".
-    public var specification: String
+    public var specification: String {
+        didSet {
+            specification = specification.replacingOccurrences(of: "_", with: "-").lowercased()
+        }
+    }
+
     /// Tags/categories of the document.
     public var tags = Set<Tag>()
 
@@ -62,13 +70,14 @@ public struct Document: Logging {
     }
 
     /// Create a new document, which contains the main information (date, specification, tags) of the ArchiveLib.
+    /// New documents should only be created by the DocumentManager in this package.
     ///
     /// - Parameters:
     ///   - documentPath: Path of the file on disk.
     ///   - availableTags: Currently available tags in archive.
     ///   - byteSize: Size of this documen in number of bytes.
     ///   - documentDownloadStatus: Download status of the document.
-    public init(path documentPath: URL, availableTags: inout Set<Tag>, size byteSize: Int64?, downloadStatus documentDownloadStatus: DownloadStatus?) {
+    init(path documentPath: URL, tagManager: TagManager, size byteSize: Int64?, downloadStatus documentDownloadStatus: DownloadStatus?) {
 
         path = documentPath
         filename = documentPath.lastPathComponent
@@ -87,15 +96,7 @@ public struct Document: Logging {
 
         // get the available tags of the archive
         for documentTagName in parsedFilename.tagNames ?? [] {
-            if var availableTag = availableTags.first(where: { $0.name == documentTagName }) {
-                availableTag.count += 1
-                availableTags.update(with: availableTag)
-                tags.insert(availableTag)
-            } else {
-                let newTag = Tag(name: documentTagName, count: 1)
-                availableTags.insert(newTag)
-                tags.insert(newTag)
-            }
+            tags.insert(tagManager.add(documentTagName))
         }
 
         // set the specification
@@ -189,6 +190,60 @@ public struct Document: Logging {
         }
 
         return (date, specification, tagNames)
+    }
+
+    // TODO: add description + unit test
+    @discardableResult
+    public func rename(archivePath: URL, slugify: Bool) throws -> Bool {
+        let foldername: String
+        let filename: String
+        do {
+            (foldername, filename) = try getRenamingPath()
+        } catch {
+            return false
+        }
+
+        // check, if this path already exists ... create it
+        let newFilepath = archivePath
+            .appendingPathComponent(foldername)
+            .appendingPathComponent(filename)
+        let fileManager = FileManager.default
+        do {
+            let folderPath = newFilepath.deletingLastPathComponent()
+            if !fileManager.fileExists(atPath: folderPath.path) {
+                try fileManager.createDirectory(at: folderPath, withIntermediateDirectories: true, attributes: nil)
+            }
+
+            // test if the document name already exists in archive, otherwise move it
+            if fileManager.fileExists(atPath: newFilepath.path),
+                self.path != newFilepath {
+                os_log("File already exists!", log: self.log, type: .error)
+                throw DocumentError.renameFailedFileAlreadyExists
+            } else {
+                try fileManager.moveItem(at: self.path, to: newFilepath)
+            }
+        } catch let error as NSError {
+            os_log("Error while moving file: %@", log: self.log, type: .error, error.description)
+            throw DocumentError.renameFailed
+        }
+        self.filename = String(newFilepath.lastPathComponent)
+        self.path = newFilepath
+
+        do {
+            var tags = [String]()
+            for tag in self.tags {
+                tags += [tag.name]
+            }
+
+            #if os(OSX)
+            // set file tags [https://stackoverflow.com/a/47340666]
+            try (newFilepath as NSURL).setResourceValue(tags, forKey: URLResourceKey.tagNamesKey)
+            #endif
+
+        } catch let error as NSError {
+            os_log("Could not set file: %@", log: self.log, type: .error, error.description)
+        }
+        return true
     }
 }
 

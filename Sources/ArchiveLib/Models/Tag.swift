@@ -7,8 +7,8 @@
 
 import Foundation
 
-/// Structure which represents a Tag.
-public struct Tag {
+/// Class which represents a Tag.
+public class Tag {
 
     /// Name of the tag.
     public let name: String
@@ -17,11 +17,12 @@ public struct Tag {
     public var count: Int
 
     /// Create a new tag.
+    /// New tags should only be created by the TagManager in this package.
     ///
     /// - Parameters:
     ///   - name: Name of the Tag.
     ///   - count: Number which indicates how many times this tag is used.
-    public init(name: String, count: Int) {
+    init(name: String, count: Int) {
         self.name = name
         self.count = count
     }
