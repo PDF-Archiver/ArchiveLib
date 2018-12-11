@@ -1,73 +1,53 @@
 //
-//  Archive.swift
-//  ArchiveLib
+//  UntaggedDocumentManager.swift
+//  ArchiveLib-iOS
 //
-//  Created by Julian Kahnert on 09.12.18.
+//  Created by Julian Kahnert on 11.12.18.
 //
 
 import Foundation
 
-public protocol DocumentManagerDelegate {
-    func getUntaggedDocuments() -> Set<Document>
-    func createAndAddUntaggedDocuments(from path: URL, downloadStatus: DownloadStatus)
-    func addUntaggedDocuments(_ newDocuments: Set<Document>)
-    func removeUntaggedDocuments(_ removableDocuments: Set<Document>)
-    func getArchivedDocuments(with searchterms: [String]) -> Set<Document>
-    func createAndAddArchivedDocuments(from path: URL, downloadStatus: DownloadStatus)
-    func addArchivedDocuments(_ newDocuments: Set<Document>)
-    func removeArchivedDocuments(_ removableDocuments: Set<Document>)
+public enum ArchiveStatus: Equatable {
+    case tagged
+    case untagged
 }
 
-public class DocumentManager: Logging {
+protocol DocumentManagerHandling {
+    var years: Set<String> { get }
 
-    private var untaggedDocuments = Set<Document>()
-    private var archivedDocuments = Set<Document>()
+    func get(scope: SearchScope, searchterms: [String], status: ArchiveStatus) -> Set<Document>
+    func add(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: ArchiveStatus)
+    func remove(_ removableDocuments: Set<Document>, status: ArchiveStatus)
+    func update(_ document: Document, status: ArchiveStatus)
+    func update(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: ArchiveStatus) -> Document
+    func archive(_ document: Document)
+}
 
-    private var tagManager = TagManager()
+class DocumentManager: Logging {
 
-    init(manager: TagManager) {
-        tagManager = manager
+    var documents = Set<Document>()
+
+    func add(_ addedDocuments: Set<Document>) {
+        documents.formUnion(addedDocuments)
     }
 
-    // - MARK: untagged document changes
-
-    public func getUntaggedDocuments() -> Set<Document> {
-        return untaggedDocuments
+    func remove(_ removableDocuments: Set<Document>) {
+        documents.subtract(removableDocuments)
     }
 
-    public func createAndAddUntaggedDocuments(from path: URL, downloadStatus: DownloadStatus = .local) {
-        // TODO: get the real size of the document here
-        let newDocument = Document(path: path, tagManager: tagManager, size: nil, downloadStatus: downloadStatus)
-        untaggedDocuments.insert(newDocument)
+    func update(_ updatedDocument: Document) {
+        documents.update(with: updatedDocument)
     }
+}
 
-    public func addUntaggedDocuments(_ newDocuments: Set<Document>) {
-        untaggedDocuments.formIntersection(newDocuments)
+extension DocumentManager: Searcher {
+    typealias Element = Document
+
+    var allSearchElements: Set<Document> {
+        return documents
     }
+}
 
-    public func removeUntaggedDocuments(_ removableDocuments: Set<Document>) {
-        untaggedDocuments.subtract(removableDocuments)
-    }
-
-    // - MARK: untagged document changes
-
-    public func getArchivedDocuments(with searchterms: [String]) -> Set<Document> {
-        return archivedDocuments
-    }
-
-    public func createAndAddArchivedDocuments(from path: URL, downloadStatus: DownloadStatus = .local) {
-        let newDocument = Document(path: path, tagManager: tagManager, size: nil, downloadStatus: downloadStatus)
-        archivedDocuments.insert(newDocument)
-    }
-
-    public func addArchivedDocuments(_ newDocuments: Set<Document>) {
-        archivedDocuments.formIntersection(newDocuments)
-    }
-
-    public func removeArchivedDocuments(_ removableDocuments: Set<Document>) {
-        archivedDocuments.subtract(removableDocuments)
-        for document in removableDocuments {
-            tagManager.remove(document.tags)
-        }
-    }
+enum DocumentManagerError: Error {
+    case archivableDocumentNotFound
 }

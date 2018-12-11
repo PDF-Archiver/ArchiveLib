@@ -7,6 +7,11 @@
 
 import Foundation
 
+public enum SearchScope {
+    case all
+    case year(year: String)
+}
+
 /// Protocol for objects which should be searched.
 public protocol Searchable: Hashable {
 

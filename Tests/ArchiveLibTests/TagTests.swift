@@ -5,7 +5,7 @@
 //  Created by Julian Kahnert on 29.11.18.
 //
 
-import ArchiveLib
+@testable import ArchiveLib
 import XCTest
 
 class TagTests: XCTestCase {

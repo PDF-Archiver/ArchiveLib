@@ -8,32 +8,29 @@
 
 import Foundation
 
-public protocol TagManagerDelegate {
+protocol TagManagerHandling {
     func getAvailableTags(with searchterms: [String]) -> Set<Tag>
-    func add(_ newTags: Set<Tag>)
-    func remove(_ removableTags: Set<Tag>)
+    func remove(_ name: String)
     func add(_ name: String) -> Tag
 }
 
-public class TagManager {
+class TagManager {
 
-    private var availableTags = Set<Tag>()
+    var availableTags = Set<Tag>()
 
-    // - MARK: tags
-    public func getAvailableTags(with searchterms: [String]) -> Set<Tag> {
+    func getAvailableTags(with searchterms: [String]) -> Set<Tag> {
         // TODO: add search implementation here
         return availableTags
     }
 
-    public func add(_ newTags: Set<Tag>) {
-        availableTags.formIntersection(newTags)
+    func remove(_ name: String) {
+        if let availableTag = availableTags.first(where: { $0.name == name }) {
+            availableTag.count -= 1
+            availableTags.update(with: availableTag)
+        }
     }
 
-    public func remove(_ removableTags: Set<Tag>) {
-        availableTags.subtract(removableTags)
-    }
-
-    public func add(_ name: String) -> Tag {
+    func add(_ name: String) -> Tag {
         if let availableTag = availableTags.first(where: { $0.name == name }) {
             availableTag.count += 1
             availableTags.update(with: availableTag)
