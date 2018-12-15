@@ -28,10 +28,20 @@ public class Tag {
     }
 }
 
-extension Tag: Hashable, CustomStringConvertible {
+extension Tag: Hashable, Comparable, CustomStringConvertible {
+    public static func < (lhs: Tag, rhs: Tag) -> Bool {
+        return lhs.name < rhs.name
+    }
+
     public static func == (lhs: Tag, rhs: Tag) -> Bool {
         return lhs.name == rhs.name
     }
     public var hashValue: Int { return name.hashValue }
     public var description: String { return "\(name) (\(count))" }
+}
+
+extension Tag: Searchable {
+    public var searchTerm: String {
+        return name
+    }
 }

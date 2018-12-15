@@ -7,19 +7,15 @@
 
 import Foundation
 
-public enum ArchiveStatus: Equatable {
-    case tagged
-    case untagged
-}
-
-protocol DocumentManagerHandling {
+public protocol DocumentManagerHandling: class {
     var years: Set<String> { get }
 
-    func get(scope: SearchScope, searchterms: [String], status: ArchiveStatus) -> Set<Document>
-    func add(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: ArchiveStatus)
-    func remove(_ removableDocuments: Set<Document>, status: ArchiveStatus)
-    func update(_ document: Document, status: ArchiveStatus)
-    func update(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: ArchiveStatus) -> Document
+    func get(scope: SearchScope, searchterms: [String], status: TaggingStatus) -> Set<Document>
+    func add(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus)
+    func remove(_ removableDocuments: Set<Document>)
+    func removeAll(_ status: TaggingStatus)
+    func update(_ document: Document)
+    func update(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus) -> Document
     func archive(_ document: Document)
 }
 
@@ -33,6 +29,10 @@ class DocumentManager: Logging {
 
     func remove(_ removableDocuments: Set<Document>) {
         documents.subtract(removableDocuments)
+    }
+
+    func removeAll() {
+        documents = Set<Document>()
     }
 
     func update(_ updatedDocument: Document) {

@@ -13,10 +13,19 @@ import os.log
 /// - iCloudDrive: The file is currently only in iCloud Drive available.
 /// - downloading: The OS downloads the file currentyl.
 /// - local: The file is locally available.
-public enum DownloadStatus: Equatable {
+public enum DownloadStatus {
     case iCloudDrive
     case downloading(percentDownloaded: Float)
     case local
+}
+
+public enum TaggingStatus: String, Comparable {
+    case tagged
+    case untagged
+
+    public static func < (lhs: TaggingStatus, rhs: TaggingStatus) -> Bool {
+        return lhs == .untagged && rhs == .tagged
+    }
 }
 
 /// Errors which can occur while handling a document.
@@ -58,7 +67,9 @@ public class Document: Logging {
     /// Size of the document, e.g. "1,5 MB".
     public private(set) var size: String?
     /// Download status of the document.
-    public var downloadStatus: DownloadStatus?
+    public var downloadStatus: DownloadStatus
+    /// Download status of the document.
+    public var taggingStatus: TaggingStatus
 
     /// Details of the document with capitalized first letter, e.g. "Blue Pullover".
     public var specificationCapitalized: String {
@@ -77,12 +88,13 @@ public class Document: Logging {
     ///   - availableTags: Currently available tags in archive.
     ///   - byteSize: Size of this documen in number of bytes.
     ///   - documentDownloadStatus: Download status of the document.
-    init(path documentPath: URL, tagManager: TagManager, size byteSize: Int64?, downloadStatus documentDownloadStatus: DownloadStatus?) {
+    init(path documentPath: URL, tagManager: TagManager, size byteSize: Int64?, downloadStatus documentDownloadStatus: DownloadStatus, taggingStatus documentTaggingStatus: TaggingStatus) {
 
         path = documentPath
         filename = documentPath.lastPathComponent
         folder = documentPath.deletingLastPathComponent().lastPathComponent
         downloadStatus = documentDownloadStatus
+        taggingStatus = documentTaggingStatus
 
         if let byteSize = byteSize {
             size = ByteCountFormatter.string(fromByteCount: byteSize, countStyle: .file)

@@ -6,14 +6,17 @@
 //
 
 import Foundation
+import os.log
 
 public protocol ArchiveDelegate: class {
     func update(_ contentType: ContentType)
 }
 
-public class Archive: TagManagerHandling, DocumentManagerHandling {
+public protocol DocumentTagHandling {
+    func add(tag: String, to document: Document)
+}
 
-    public weak var archiveDelegate: ArchiveDelegate?
+public class Archive: TagManagerHandling, DocumentManagerHandling, DocumentTagHandling, Logging {
 
     private let taggedDocumentManager = DocumentManager()
     private let untaggedDocumentManager = DocumentManager()
@@ -30,11 +33,11 @@ public class Archive: TagManagerHandling, DocumentManagerHandling {
         tagManager.remove(name)
     }
 
-    public func add(_ name: String) -> Tag {
-        return tagManager.add(name)
+    public func add(_ name: String, count: Int = 1) -> Tag {
+        return tagManager.add(name, count: count)
     }
 
-    // MARK: - TagManagerHandling implementation
+    // MARK: - DocumentHandling implementation
     public var years: Set<String> {
         var years = Set<String>()
         for document in taggedDocumentManager.documents {
@@ -43,7 +46,7 @@ public class Archive: TagManagerHandling, DocumentManagerHandling {
         return years
     }
 
-    public func get(scope: SearchScope, searchterms: [String], status: ArchiveStatus) -> Set<Document> {
+    public func get(scope: SearchScope, searchterms: [String], status: TaggingStatus) -> Set<Document> {
 
         let documentManager: DocumentManager
         switch status {
@@ -68,8 +71,8 @@ public class Archive: TagManagerHandling, DocumentManagerHandling {
         return scopeFilteredDocuments.intersection(termFilteredDocuments)
     }
 
-    public func add(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: ArchiveStatus) {
-        let newDocument = Document(path: path, tagManager: tagManager, size: size, downloadStatus: downloadStatus)
+    public func add(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus) {
+        let newDocument = Document(path: path, tagManager: tagManager, size: size, downloadStatus: downloadStatus, taggingStatus: status)
         switch status {
         case .tagged:
             return taggedDocumentManager.add(Set([newDocument]))
@@ -78,17 +81,44 @@ public class Archive: TagManagerHandling, DocumentManagerHandling {
         }
     }
 
-    public func remove(_ removableDocuments: Set<Document>, status: ArchiveStatus) {
-        switch status {
-        case .tagged:
-            return taggedDocumentManager.remove(removableDocuments)
-        case .untagged:
-            return untaggedDocumentManager.remove(removableDocuments)
+    public func remove(_ removableDocuments: Set<Document>) {
+
+        // remove tags
+        for document in removableDocuments {
+            for tag in document.tags {
+                tagManager.remove(tag.name)
+            }
+        }
+
+        // remove documents
+        for document in removableDocuments {
+            switch document.taggingStatus {
+            case .tagged:
+                return taggedDocumentManager.remove(Set([document]))
+            case .untagged:
+                return untaggedDocumentManager.remove(Set([document]))
+            }
         }
     }
 
-    public func update(_ document: Document, status: ArchiveStatus) {
+    public func removeAll(_ status: TaggingStatus) {
+
+        // get the right document manager
+        let documentManager: DocumentManager
         switch status {
+        case .tagged:
+            documentManager = taggedDocumentManager
+        case .untagged:
+            documentManager = untaggedDocumentManager
+        }
+
+        // remove the documents
+        let allRemovableDocuments = documentManager.documents
+        remove(allRemovableDocuments)
+    }
+
+    public func update(_ document: Document) {
+        switch document.taggingStatus {
         case .tagged:
             return taggedDocumentManager.update(document)
         case .untagged:
@@ -101,8 +131,8 @@ public class Archive: TagManagerHandling, DocumentManagerHandling {
         taggedDocumentManager.add(Set([document]))
     }
 
-    public func update(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: ArchiveStatus) -> Document {
-        let updatedDocument = Document(path: path, tagManager: tagManager, size: size, downloadStatus: downloadStatus)
+    public func update(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus) -> Document {
+        let updatedDocument = Document(path: path, tagManager: tagManager, size: size, downloadStatus: downloadStatus, taggingStatus: status)
         switch status {
         case .tagged:
             taggedDocumentManager.update(updatedDocument)
@@ -110,6 +140,27 @@ public class Archive: TagManagerHandling, DocumentManagerHandling {
             untaggedDocumentManager.update(updatedDocument)
         }
         return updatedDocument
+    }
+
+    // MARK: - DocumentTagHandling implementation
+    public func add(tag: String, to document: Document) {
+
+        // test if tag already exists in document tags
+        if document.tags.filter({ $0.name == tag }).isEmpty {
+
+            // tag count update
+            let newTag = add(tag)
+
+            // add the new tag
+            document.tags.insert(newTag)
+
+            switch document.taggingStatus {
+            case .tagged:
+                taggedDocumentManager.update(document)
+            case .untagged:
+                untaggedDocumentManager.update(document)
+            }
+        }
     }
 }
 

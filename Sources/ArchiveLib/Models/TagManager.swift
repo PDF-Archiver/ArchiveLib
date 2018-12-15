@@ -8,10 +8,10 @@
 
 import Foundation
 
-protocol TagManagerHandling {
+public protocol TagManagerHandling: class {
     func getAvailableTags(with searchterms: [String]) -> Set<Tag>
     func remove(_ name: String)
-    func add(_ name: String) -> Tag
+    func add(_ name: String, count: Int) -> Tag
 }
 
 class TagManager {
@@ -19,8 +19,11 @@ class TagManager {
     var availableTags = Set<Tag>()
 
     func getAvailableTags(with searchterms: [String]) -> Set<Tag> {
-        // TODO: add search implementation here
-        return availableTags
+        if searchterms.joined().isEmpty {
+            return availableTags
+        } else {
+            return filterBy(searchterms)
+        }
     }
 
     func remove(_ name: String) {
@@ -30,15 +33,24 @@ class TagManager {
         }
     }
 
-    func add(_ name: String) -> Tag {
+    func add(_ name: String, count: Int = 1) -> Tag {
         if let availableTag = availableTags.first(where: { $0.name == name }) {
-            availableTag.count += 1
+            availableTag.count += count
             availableTags.update(with: availableTag)
             return availableTag
         } else {
-            let newTag = Tag(name: name, count: 1)
+            let newTag = Tag(name: name, count: count)
             availableTags.insert(newTag)
             return newTag
         }
+    }
+}
+
+extension TagManager: Searcher {
+
+    typealias Element = Tag
+
+    var allSearchElements: Set<Tag> {
+        return availableTags
     }
 }
