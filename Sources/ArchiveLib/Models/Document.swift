@@ -240,6 +240,7 @@ public class Document: Logging {
         }
         self.filename = String(newFilepath.lastPathComponent)
         self.path = newFilepath
+        self.taggingStatus = .tagged
 
         do {
             var tags = [String]()
