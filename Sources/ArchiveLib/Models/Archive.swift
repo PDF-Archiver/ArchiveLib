@@ -12,11 +12,7 @@ public protocol ArchiveDelegate: class {
     func update(_ contentType: ContentType)
 }
 
-public protocol DocumentTagHandling {
-    func add(tag: String, to document: Document)
-}
-
-public class Archive: TagManagerHandling, DocumentManagerHandling, DocumentTagHandling, Logging {
+public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
 
     private let taggedDocumentManager = DocumentManager()
     private let untaggedDocumentManager = DocumentManager()
@@ -75,9 +71,9 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, DocumentTagHa
         let newDocument = Document(path: path, tagManager: tagManager, size: size, downloadStatus: downloadStatus, taggingStatus: status)
         switch status {
         case .tagged:
-            return taggedDocumentManager.add(Set([newDocument]))
+            return taggedDocumentManager.add(newDocument)
         case .untagged:
-            return untaggedDocumentManager.add(Set([newDocument]))
+            return untaggedDocumentManager.add(newDocument)
         }
     }
 
@@ -94,9 +90,9 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, DocumentTagHa
         for document in removableDocuments {
             switch document.taggingStatus {
             case .tagged:
-                return taggedDocumentManager.remove(Set([document]))
+                return taggedDocumentManager.remove(document)
             case .untagged:
-                return untaggedDocumentManager.remove(Set([document]))
+                return untaggedDocumentManager.remove(document)
             }
         }
     }
@@ -127,8 +123,8 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, DocumentTagHa
     }
 
     public func archive(_ document: Document) {
-        untaggedDocumentManager.remove(Set([document]))
-        taggedDocumentManager.add(Set([document]))
+        untaggedDocumentManager.remove(document)
+        taggedDocumentManager.add(document)
     }
 
     public func update(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus) -> Document {

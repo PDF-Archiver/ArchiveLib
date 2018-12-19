@@ -23,8 +23,16 @@ class DocumentManager: Logging {
 
     var documents = Set<Document>()
 
+    func add(_ addedDocument: Document) {
+        add(Set([addedDocument]))
+    }
+
     func add(_ addedDocuments: Set<Document>) {
         documents.formUnion(addedDocuments)
+    }
+
+    func remove(_ removableDocument: Document) {
+        remove(Set([removableDocument]))
     }
 
     func remove(_ removableDocuments: Set<Document>) {
