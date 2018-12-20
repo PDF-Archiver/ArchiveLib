@@ -9,43 +9,30 @@
 
 import Foundation
 
-public typealias SortDescriptor<Value> = (Value, Value) -> Bool
+/// A type that can be sorted by a NSSortDescriptor.
+public protocol CustomComparable {
 
-public func sortDescriptor<Value, Key>(key: @escaping (Value) -> Key, ascending: Bool) -> SortDescriptor<Value> where Key: Comparable {
-    return { ascending ? key($0) < key($1) : key($0) > key($1) }
+    /// Compare this object with another object of this type, using a NSSortDescriptor.
+    ///
+    /// - Parameters:
+    ///   - other: Object that should be used for comparison.
+    ///   - sortDescriptor: NSSortDescriptor that should be used by comparison.
+    /// - Returns: Comparison result.
+    func isBefore(_ other: Self, _ sortDescriptor: NSSortDescriptor) -> Bool
 }
 
-public func combine<Value>(sortDescriptors: [SortDescriptor<Value>]) -> SortDescriptor<Value> {
-    return { lhs, rhs in
-        for isOrderedBefore in sortDescriptors {
-            if isOrderedBefore(lhs, rhs) { return true }
-            if isOrderedBefore(rhs, lhs) { return false }
+/// Sort items by some sort descriptors.
+///
+/// - Parameters:
+///   - items: Items that should be sorted.
+///   - sortDescriptors: Descriptors that specify the sorting.
+/// - Returns: Sorted items.
+public func sort<Type: CustomComparable>(_ items: [Type], by sortDescriptors: [NSSortDescriptor]) -> [Type] {
+    return items.sorted { (lhs, rhs) -> Bool in
+        for sortDescriptor in sortDescriptors {
+            if lhs.isBefore(rhs, sortDescriptor) { return true }
+            if rhs.isBefore(lhs, sortDescriptor) { return false }
         }
         return false
     }
 }
-
-// TODO: generalize this
-//public func createSortDescriptors<Tag, Key>(sortDescriptors: [NSSortDescriptor], mapping: (String) -> ((Tag) -> Key)) -> SortDescriptor<Tag> where Key: Comparable {
-//
-//    // create the swifty sort descriptors
-//    var swiftySortDescriptors = [SortDescriptor<Tag>]()
-//    for tagSortDescriptor in sortDescriptors {
-//        guard let key = tagSortDescriptor.key else { continue }
-//
-//        let map = mapping(key)
-//
-//        if key == "name" {
-//
-//            let sortByName: SortDescriptor<Tag> = sortDescriptor(key: map, ascending: tagSortDescriptor.ascending)
-//            swiftySortDescriptors.append(sortByName)
-//        } else if key == "count" {
-//
-//            let sortByCount: SortDescriptor<Tag> = sortDescriptor(key: map, ascending: tagSortDescriptor.ascending)
-//            swiftySortDescriptors.append(sortByCount)
-//        }
-//    }
-//
-//    // combine the swifty sort dscriptors
-//    return combine(sortDescriptors: swiftySortDescriptors)
-//}

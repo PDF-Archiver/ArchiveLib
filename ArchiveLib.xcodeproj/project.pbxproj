@@ -32,8 +32,6 @@
 		A3D631A121B14A9B009FE9C3 /* DateParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D6319F21B14A9B009FE9C3 /* DateParserTests.swift */; };
 		A3D631A621B1C34E009FE9C3 /* StringExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D631A521B1C34E009FE9C3 /* StringExtensionTests.swift */; };
 		A3D631A721B1C34E009FE9C3 /* StringExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D631A521B1C34E009FE9C3 /* StringExtensionTests.swift */; };
-		A3F3DACD21B369250004EFF6 /* UrlExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3DACC21B369250004EFF6 /* UrlExtension.swift */; };
-		A3F3DACE21B369250004EFF6 /* UrlExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3DACC21B369250004EFF6 /* UrlExtension.swift */; };
 		A3F3DAD221B3EE990004EFF6 /* TagManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3DAD121B3EE990004EFF6 /* TagManager.swift */; };
 		A3F3DAD321B3EE990004EFF6 /* TagManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3DAD121B3EE990004EFF6 /* TagManager.swift */; };
 		OBJ_34 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* Document.swift */; };
@@ -74,7 +72,6 @@
 		A3D6319B21B13FDD009FE9C3 /* DocumentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentTests.swift; sourceTree = "<group>"; };
 		A3D6319F21B14A9B009FE9C3 /* DateParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateParserTests.swift; sourceTree = "<group>"; };
 		A3D631A521B1C34E009FE9C3 /* StringExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionTests.swift; sourceTree = "<group>"; };
-		A3F3DACC21B369250004EFF6 /* UrlExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlExtension.swift; sourceTree = "<group>"; };
 		A3F3DAD121B3EE990004EFF6 /* TagManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagManager.swift; sourceTree = "<group>"; };
 		"ArchiveLib::ArchiveLib::Product" /* ArchiveLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ArchiveLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_13 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
@@ -160,7 +157,6 @@
 				OBJ_16 /* Logging.swift */,
 				OBJ_17 /* StringExtensions.swift */,
 				A352A11921A481AF001DEAC7 /* DateParser.swift */,
-				A3F3DACC21B369250004EFF6 /* UrlExtension.swift */,
 				A393ADE121C858A200A96AD2 /* SortDescriptors.swift */,
 			);
 			path = Helpers;
@@ -450,7 +446,6 @@
 				A393ADE221C858A200A96AD2 /* SortDescriptors.swift in Sources */,
 				A306673D21A4A91000378032 /* Tag.swift in Sources */,
 				A3F3DAD221B3EE990004EFF6 /* TagManager.swift in Sources */,
-				A3F3DACD21B369250004EFF6 /* UrlExtension.swift in Sources */,
 				A306673E21A4A91500378032 /* Logging.swift in Sources */,
 				A306674121A4A91F00378032 /* Search.swift in Sources */,
 				A306674021A4A91B00378032 /* DateParser.swift in Sources */,
@@ -468,7 +463,6 @@
 				A393ADE321C858A200A96AD2 /* SortDescriptors.swift in Sources */,
 				OBJ_34 /* Document.swift in Sources */,
 				A3F3DAD321B3EE990004EFF6 /* TagManager.swift in Sources */,
-				A3F3DACE21B369250004EFF6 /* UrlExtension.swift in Sources */,
 				OBJ_35 /* Tag.swift in Sources */,
 				OBJ_36 /* Logging.swift in Sources */,
 				OBJ_37 /* StringExtensions.swift in Sources */,

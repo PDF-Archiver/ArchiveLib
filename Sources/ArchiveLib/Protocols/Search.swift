@@ -7,6 +7,10 @@
 
 import Foundation
 
+/// Scope, which defines the documents that should be searched.
+///
+/// - all: Search the whole archive.
+/// - year: Search in a specific year.
 public enum SearchScope {
     case all
     case year(year: String)

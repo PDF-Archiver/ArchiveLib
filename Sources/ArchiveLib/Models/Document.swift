@@ -19,6 +19,10 @@ public enum DownloadStatus {
     case local
 }
 
+/// Tagging status of a document.
+///
+/// - tagged: Document is already tagged.
+/// - untagged: Document that is not tagged.
 public enum TaggingStatus: String, Comparable {
     case tagged
     case untagged
@@ -32,12 +36,13 @@ public enum TaggingStatus: String, Comparable {
 ///
 /// - description: A error in the description.
 /// - tags: A error in the document tags.
+/// - renameFailed: Gerneral error while renaming document.
+/// - renameFailedFileAlreadyExists: A document with this name already exists in the archive.
 public enum DocumentError: Error {
     case description
     case tags
     case renameFailed
     case renameFailedFileAlreadyExists
-
 }
 
 /// Main structure which contains a document.
@@ -204,16 +209,16 @@ public class Document: Logging {
         return (date, specification, tagNames)
     }
 
-    // TODO: add description + unit test
-    @discardableResult
-    public func rename(archivePath: URL, slugify: Bool) throws -> Bool {
+    /// Rename this document and save in in the archive path.
+    ///
+    /// - Parameters:
+    ///   - archivePath: Path of the archive, where the document should be saved.
+    ///   - slugify: Should the document name be slugified?
+    /// - Throws: Renaming might fail and throws an error, e.g. because a document with this filename already exists.
+    public func rename(archivePath: URL, slugify: Bool) throws {
         let foldername: String
         let filename: String
-        do {
-            (foldername, filename) = try getRenamingPath()
-        } catch {
-            return false
-        }
+        (foldername, filename) = try getRenamingPath()
 
         // check, if this path already exists ... create it
         let newFilepath = archivePath
@@ -256,7 +261,6 @@ public class Document: Logging {
         } catch let error as NSError {
             os_log("Could not set file: %@", log: self.log, type: .error, error.description)
         }
-        return true
     }
 }
 
@@ -287,4 +291,15 @@ extension Document: Searchable {
 
     // Searchable stubs
     public var searchTerm: String { return filename }
+}
+
+extension Document: CustomComparable {
+    public func isBefore(_ other: Document, _ sort: NSSortDescriptor) -> Bool {
+        if sort.key == "filename" {
+            return sort.ascending ? filename < other.filename : filename > other.filename
+        } else if sort.key == "taggingStatus" {
+            return sort.ascending ? taggingStatus < other.taggingStatus : taggingStatus > other.taggingStatus
+        }
+        return false
+    }
 }
