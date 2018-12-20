@@ -4,6 +4,7 @@
 </a><br><br>
 
 <a href="https://geo.itunes.apple.com/us/app/pdf-archiver/id1352719750?mt=12&app=apps" style="display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/macappstore-lrg.svg) no-repeat;width:165px;height:40px;background-size:contain;"></a><br>
+[![codecov](https://codecov.io/gh/PDF-Archiver/ArchiveLib/branch/develop/graph/badge.svg)](https://codecov.io/gh/PDF-Archiver/ArchiveLib)
 </div>
 
 
