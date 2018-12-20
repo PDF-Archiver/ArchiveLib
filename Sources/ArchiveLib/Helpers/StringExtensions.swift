@@ -29,7 +29,7 @@ public extension String {
             .components(separatedBy: slugCharacterSet.inverted)
             .filter { !$0.isEmpty }
             .joined(separator: separator)
-            .replacingOccurrences(of: "[^A-Za-z]+", with: separator, options: .regularExpression, range: nil)
+            .replacingOccurrences(of: "[^0-9a-zA-Z]+", with: separator, options: .regularExpression, range: nil)
     }
 
     /// Find groups by a given regular expression.

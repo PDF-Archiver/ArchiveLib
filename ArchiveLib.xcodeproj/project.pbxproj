@@ -15,9 +15,15 @@
 		A306673F21A4A91800378032 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* StringExtensions.swift */; };
 		A306674021A4A91B00378032 /* DateParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A352A11921A481AF001DEAC7 /* DateParser.swift */; };
 		A306674121A4A91F00378032 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_19 /* Search.swift */; };
+		A3199FD821C051B600D07553 /* DocumentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3199FD721C051B600D07553 /* DocumentManager.swift */; };
+		A3199FD921C051BB00D07553 /* DocumentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3199FD721C051B600D07553 /* DocumentManager.swift */; };
 		A352A11A21A481AF001DEAC7 /* DateParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A352A11921A481AF001DEAC7 /* DateParser.swift */; };
 		A352A17221A48DDD001DEAC7 /* ArchiveLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "ArchiveLib::ArchiveLib::Product" /* ArchiveLib.framework */; };
 		A352A19B21A49275001DEAC7 /* ArchiveLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A352A18421A491D7001DEAC7 /* ArchiveLib.framework */; };
+		A393ADE221C858A200A96AD2 /* SortDescriptors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393ADE121C858A200A96AD2 /* SortDescriptors.swift */; };
+		A393ADE321C858A200A96AD2 /* SortDescriptors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393ADE121C858A200A96AD2 /* SortDescriptors.swift */; };
+		A394387421BD4CCF0024E2F6 /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = A394387321BD4CCF0024E2F6 /* Archive.swift */; };
+		A394387521BD4CCF0024E2F6 /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = A394387321BD4CCF0024E2F6 /* Archive.swift */; };
 		A3D6319921B06D3A009FE9C3 /* TagTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D6319821B06D3A009FE9C3 /* TagTests.swift */; };
 		A3D6319A21B06D40009FE9C3 /* TagTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D6319821B06D3A009FE9C3 /* TagTests.swift */; };
 		A3D6319C21B13FDD009FE9C3 /* DocumentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D6319B21B13FDD009FE9C3 /* DocumentTests.swift */; };
@@ -26,6 +32,8 @@
 		A3D631A121B14A9B009FE9C3 /* DateParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D6319F21B14A9B009FE9C3 /* DateParserTests.swift */; };
 		A3D631A621B1C34E009FE9C3 /* StringExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D631A521B1C34E009FE9C3 /* StringExtensionTests.swift */; };
 		A3D631A721B1C34E009FE9C3 /* StringExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D631A521B1C34E009FE9C3 /* StringExtensionTests.swift */; };
+		A3F3DAD221B3EE990004EFF6 /* TagManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3DAD121B3EE990004EFF6 /* TagManager.swift */; };
+		A3F3DAD321B3EE990004EFF6 /* TagManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3DAD121B3EE990004EFF6 /* TagManager.swift */; };
 		OBJ_34 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* Document.swift */; };
 		OBJ_35 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* Tag.swift */; };
 		OBJ_36 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* Logging.swift */; };
@@ -51,16 +59,20 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A3199FD721C051B600D07553 /* DocumentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentManager.swift; sourceTree = "<group>"; };
 		A352A11921A481AF001DEAC7 /* DateParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateParser.swift; sourceTree = "<group>"; };
 		A352A15E21A48DC0001DEAC7 /* ArchiveLib-iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ArchiveLib-iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A352A16221A48DC0001DEAC7 /* ArchiveLibTests.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ArchiveLibTests.plist; sourceTree = "<group>"; };
 		A352A16D21A48DDD001DEAC7 /* ArchiveLib-macOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ArchiveLib-macOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A352A18421A491D7001DEAC7 /* ArchiveLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ArchiveLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A352A19C21A49489001DEAC7 /* ArchiveLib.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ArchiveLib.plist; sourceTree = "<group>"; };
+		A393ADE121C858A200A96AD2 /* SortDescriptors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortDescriptors.swift; sourceTree = "<group>"; };
+		A394387321BD4CCF0024E2F6 /* Archive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Archive.swift; sourceTree = "<group>"; };
 		A3D6319821B06D3A009FE9C3 /* TagTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagTests.swift; sourceTree = "<group>"; };
 		A3D6319B21B13FDD009FE9C3 /* DocumentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentTests.swift; sourceTree = "<group>"; };
 		A3D6319F21B14A9B009FE9C3 /* DateParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateParserTests.swift; sourceTree = "<group>"; };
 		A3D631A521B1C34E009FE9C3 /* StringExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionTests.swift; sourceTree = "<group>"; };
+		A3F3DAD121B3EE990004EFF6 /* TagManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagManager.swift; sourceTree = "<group>"; };
 		"ArchiveLib::ArchiveLib::Product" /* ArchiveLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ArchiveLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_13 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 		OBJ_14 /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
@@ -130,8 +142,11 @@
 		OBJ_12 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				A394387321BD4CCF0024E2F6 /* Archive.swift */,
 				OBJ_13 /* Document.swift */,
 				OBJ_14 /* Tag.swift */,
+				A3F3DAD121B3EE990004EFF6 /* TagManager.swift */,
+				A3199FD721C051B600D07553 /* DocumentManager.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -142,6 +157,7 @@
 				OBJ_16 /* Logging.swift */,
 				OBJ_17 /* StringExtensions.swift */,
 				A352A11921A481AF001DEAC7 /* DateParser.swift */,
+				A393ADE121C858A200A96AD2 /* SortDescriptors.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -427,11 +443,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				A306673F21A4A91800378032 /* StringExtensions.swift in Sources */,
+				A393ADE221C858A200A96AD2 /* SortDescriptors.swift in Sources */,
 				A306673D21A4A91000378032 /* Tag.swift in Sources */,
+				A3F3DAD221B3EE990004EFF6 /* TagManager.swift in Sources */,
 				A306673E21A4A91500378032 /* Logging.swift in Sources */,
 				A306674121A4A91F00378032 /* Search.swift in Sources */,
 				A306674021A4A91B00378032 /* DateParser.swift in Sources */,
 				A306673C21A4A90E00378032 /* Document.swift in Sources */,
+				A3199FD821C051B600D07553 /* DocumentManager.swift in Sources */,
+				A394387421BD4CCF0024E2F6 /* Archive.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -440,11 +460,15 @@
 			buildActionMask = 0;
 			files = (
 				A352A11A21A481AF001DEAC7 /* DateParser.swift in Sources */,
+				A393ADE321C858A200A96AD2 /* SortDescriptors.swift in Sources */,
 				OBJ_34 /* Document.swift in Sources */,
+				A3F3DAD321B3EE990004EFF6 /* TagManager.swift in Sources */,
 				OBJ_35 /* Tag.swift in Sources */,
 				OBJ_36 /* Logging.swift in Sources */,
 				OBJ_37 /* StringExtensions.swift in Sources */,
 				OBJ_38 /* Search.swift in Sources */,
+				A3199FD921C051BB00D07553 /* DocumentManager.swift in Sources */,
+				A394387521BD4CCF0024E2F6 /* Archive.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
