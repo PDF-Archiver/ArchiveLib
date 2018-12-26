@@ -13,7 +13,7 @@ import os.log
 /// - iCloudDrive: The file is currently only in iCloud Drive available.
 /// - downloading: The OS downloads the file currentyl.
 /// - local: The file is locally available.
-public enum DownloadStatus {
+public enum DownloadStatus: Equatable {
     case iCloudDrive
     case downloading(percentDownloaded: Float)
     case local
