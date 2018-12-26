@@ -10,7 +10,7 @@ import XCTest
 
 class TagSearcher: Searcher {
     typealias Element = Tag
-    
+
     var allSearchElements: Set<Tag> = []
 }
 
@@ -65,30 +65,30 @@ class TagTests: XCTestCase {
     }
 
     func testComparable() {
-        
+
         // create tags
         let tag1 = Tag(name: "tag1", count: 2)
         let tag2 = Tag(name: "tag2", count: 1)
-        
+
         // assert
         XCTAssertLessThan(tag1, tag2)
     }
-    
+
     func testTagSearch() {
-        
+
         // create some tags
         let tag1 = Tag(name: "tag1", count: 1)
         let tag2 = Tag(name: "tag2", count: 2)
         let tag3 = Tag(name: "tag3", count: 3)
-        
+
         // calculate
         let tagSearcher = TagSearcher()
         tagSearcher.allSearchElements.insert(tag1)
         tagSearcher.allSearchElements.insert(tag2)
         tagSearcher.allSearchElements.insert(tag3)
-        
+
         let filteredTags = tagSearcher.filterBy("tag1")
-        
+
         // assert
         XCTAssertEqual(filteredTags.count, 1)
         XCTAssertEqual(filteredTags, Set([tag1]))
