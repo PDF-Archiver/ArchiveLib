@@ -1,9 +1,19 @@
 <div align="center">
 <a href="https://geo.itunes.apple.com/us/app/pdf-archiver/id1352719750?mt=12&app=apps" target="itunes_store">
   <img src="assets/AppIcon.svg" width="200px">
-</a><br><br>
-
-<a href="https://geo.itunes.apple.com/us/app/pdf-archiver/id1352719750?mt=12&app=apps" style="display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/macappstore-lrg.svg) no-repeat;width:165px;height:40px;background-size:contain;"></a><br>
+</a>
+<br>
+<br>
+<a href="https://geo.itunes.apple.com/us/app/pdf-archiver/id1352719750?mt=12&app=apps">
+<img src="https://linkmaker.itunes.apple.com/en-us/badge-lrg.svg?releaseDate=2018-02-28T00:00:00Z&kind=desktopapp&bubble=macos_apps" width="165px">
+</a>
+<br>
+<a href="https://travis-ci.org/PDF-Archiver/ArchiveLib">
+<img src="https://travis-ci.org/PDF-Archiver/ArchiveLib.svg?branch=develop">
+</a>
+<a href="https://codecov.io/gh/PDF-Archiver/ArchiveLib">
+<img src="https://codecov.io/gh/PDF-Archiver/ArchiveLib/branch/develop/graph/badge.svg">
+</a>
 </div>
 
 

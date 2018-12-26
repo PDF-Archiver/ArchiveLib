@@ -28,8 +28,12 @@ class TagManager {
 
     func remove(_ name: String) {
         if let availableTag = availableTags.first(where: { $0.name == name }) {
-            availableTag.count -= 1
-            availableTags.update(with: availableTag)
+            if availableTag.count <= 1 {
+                availableTags.subtract(Set([availableTag]))
+            } else {
+                availableTag.count -= 1
+                availableTags.update(with: availableTag)
+            }
         }
     }
 

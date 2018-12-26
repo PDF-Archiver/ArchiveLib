@@ -13,7 +13,7 @@ import os.log
 /// - iCloudDrive: The file is currently only in iCloud Drive available.
 /// - downloading: The OS downloads the file currentyl.
 /// - local: The file is locally available.
-public enum DownloadStatus {
+public enum DownloadStatus: Equatable {
     case iCloudDrive
     case downloading(percentDownloaded: Float)
     case local
@@ -247,20 +247,20 @@ public class Document: Logging {
         self.path = newFilepath
         self.taggingStatus = .tagged
 
+        #if os(OSX)
         do {
             var tags = [String]()
             for tag in self.tags {
                 tags += [tag.name]
             }
 
-            #if os(OSX)
             // set file tags [https://stackoverflow.com/a/47340666]
             try (newFilepath as NSURL).setResourceValue(tags, forKey: URLResourceKey.tagNamesKey)
-            #endif
 
         } catch let error as NSError {
             os_log("Could not set file: %@", log: self.log, type: .error, error.description)
         }
+        #endif
     }
 }
 
@@ -294,12 +294,12 @@ extension Document: Searchable {
 }
 
 extension Document: CustomComparable {
-    public func isBefore(_ other: Document, _ sort: NSSortDescriptor) -> Bool {
+    public func isBefore(_ other: Document, _ sort: NSSortDescriptor) throws -> Bool {
         if sort.key == "filename" {
             return sort.ascending ? filename < other.filename : filename > other.filename
         } else if sort.key == "taggingStatus" {
             return sort.ascending ? taggingStatus < other.taggingStatus : taggingStatus > other.taggingStatus
         }
-        return false
+        throw SortDescriptorError.invalidKey
     }
 }

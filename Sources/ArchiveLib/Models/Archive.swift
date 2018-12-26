@@ -71,9 +71,9 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
         let newDocument = Document(path: path, tagManager: tagManager, size: size, downloadStatus: downloadStatus, taggingStatus: status)
         switch status {
         case .tagged:
-            return taggedDocumentManager.add(newDocument)
+            taggedDocumentManager.add(newDocument)
         case .untagged:
-            return untaggedDocumentManager.add(newDocument)
+            untaggedDocumentManager.add(newDocument)
         }
     }
 
@@ -90,9 +90,9 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
         for document in removableDocuments {
             switch document.taggingStatus {
             case .tagged:
-                return taggedDocumentManager.remove(document)
+                taggedDocumentManager.remove(document)
             case .untagged:
-                return untaggedDocumentManager.remove(document)
+                untaggedDocumentManager.remove(document)
             }
         }
     }
@@ -116,9 +116,9 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
     public func update(_ document: Document) {
         switch document.taggingStatus {
         case .tagged:
-            return taggedDocumentManager.update(document)
+            taggedDocumentManager.update(document)
         case .untagged:
-            return untaggedDocumentManager.update(document)
+            untaggedDocumentManager.update(document)
         }
     }
 
