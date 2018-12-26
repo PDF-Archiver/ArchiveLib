@@ -32,6 +32,8 @@
 		A3A472D921D3E423000B7D79 /* TagManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A472D721D3E423000B7D79 /* TagManagerTests.swift */; };
 		A3A472DB21D3E9A3000B7D79 /* ArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A472DA21D3E9A3000B7D79 /* ArchiveTests.swift */; };
 		A3A472DC21D3E9A3000B7D79 /* ArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A472DA21D3E9A3000B7D79 /* ArchiveTests.swift */; };
+		A3A472DE21D3FDC4000B7D79 /* LoggingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A472DD21D3FDC4000B7D79 /* LoggingTests.swift */; };
+		A3A472DF21D3FDC4000B7D79 /* LoggingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A472DD21D3FDC4000B7D79 /* LoggingTests.swift */; };
 		A3D6319921B06D3A009FE9C3 /* TagTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D6319821B06D3A009FE9C3 /* TagTests.swift */; };
 		A3D6319A21B06D40009FE9C3 /* TagTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D6319821B06D3A009FE9C3 /* TagTests.swift */; };
 		A3D6319C21B13FDD009FE9C3 /* DocumentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D6319B21B13FDD009FE9C3 /* DocumentTests.swift */; };
@@ -80,6 +82,7 @@
 		A3A472D421D3DD99000B7D79 /* DocumentManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentManagerTests.swift; sourceTree = "<group>"; };
 		A3A472D721D3E423000B7D79 /* TagManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagManagerTests.swift; sourceTree = "<group>"; };
 		A3A472DA21D3E9A3000B7D79 /* ArchiveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveTests.swift; sourceTree = "<group>"; };
+		A3A472DD21D3FDC4000B7D79 /* LoggingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingTests.swift; sourceTree = "<group>"; };
 		A3D6319821B06D3A009FE9C3 /* TagTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagTests.swift; sourceTree = "<group>"; };
 		A3D6319B21B13FDD009FE9C3 /* DocumentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentTests.swift; sourceTree = "<group>"; };
 		A3D6319F21B14A9B009FE9C3 /* DateParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateParserTests.swift; sourceTree = "<group>"; };
@@ -197,6 +200,7 @@
 				A3D6319F21B14A9B009FE9C3 /* DateParserTests.swift */,
 				A3A472D421D3DD99000B7D79 /* DocumentManagerTests.swift */,
 				A3D6319B21B13FDD009FE9C3 /* DocumentTests.swift */,
+				A3A472DD21D3FDC4000B7D79 /* LoggingTests.swift */,
 				OBJ_23 /* SearchTests.swift */,
 				A35D98CD21CC355A0039E9D4 /* SortDescriptorsTests.swift */,
 				A3D631A521B1C34E009FE9C3 /* StringExtensionTests.swift */,
@@ -437,6 +441,7 @@
 				A3D6319921B06D3A009FE9C3 /* TagTests.swift in Sources */,
 				A3A472D521D3DD99000B7D79 /* DocumentManagerTests.swift in Sources */,
 				A3A472D821D3E423000B7D79 /* TagManagerTests.swift in Sources */,
+				A3A472DE21D3FDC4000B7D79 /* LoggingTests.swift in Sources */,
 				A3D6319C21B13FDD009FE9C3 /* DocumentTests.swift in Sources */,
 				A35D98D021CC3A5B0039E9D4 /* SortDescriptorsTests.swift in Sources */,
 				A3D631A621B1C34E009FE9C3 /* StringExtensionTests.swift in Sources */,
@@ -453,6 +458,7 @@
 				A3D6319A21B06D40009FE9C3 /* TagTests.swift in Sources */,
 				A3A472D621D3DD99000B7D79 /* DocumentManagerTests.swift in Sources */,
 				A3A472D921D3E423000B7D79 /* TagManagerTests.swift in Sources */,
+				A3A472DF21D3FDC4000B7D79 /* LoggingTests.swift in Sources */,
 				A3D6319D21B13FE6009FE9C3 /* DocumentTests.swift in Sources */,
 				A35D98D121CC3A5C0039E9D4 /* SortDescriptorsTests.swift in Sources */,
 				A3D631A721B1C34E009FE9C3 /* StringExtensionTests.swift in Sources */,

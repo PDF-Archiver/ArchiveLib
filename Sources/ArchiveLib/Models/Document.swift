@@ -247,20 +247,20 @@ public class Document: Logging {
         self.path = newFilepath
         self.taggingStatus = .tagged
 
+        #if os(OSX)
         do {
             var tags = [String]()
             for tag in self.tags {
                 tags += [tag.name]
             }
 
-            #if os(OSX)
             // set file tags [https://stackoverflow.com/a/47340666]
             try (newFilepath as NSURL).setResourceValue(tags, forKey: URLResourceKey.tagNamesKey)
-            #endif
 
         } catch let error as NSError {
             os_log("Could not set file: %@", log: self.log, type: .error, error.description)
         }
+        #endif
     }
 }
 
