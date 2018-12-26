@@ -47,12 +47,12 @@ extension Tag: Searchable {
 }
 
 extension Tag: CustomComparable {
-    public func isBefore(_ other: Tag, _ sort: NSSortDescriptor) -> Bool {
+    public func isBefore(_ other: Tag, _ sort: NSSortDescriptor) throws -> Bool {
         if sort.key == "name" {
             return sort.ascending ? name < other.name : name > other.name
         } else if sort.key == "count" {
             return sort.ascending ? count < other.count : count > other.count
         }
-        return false
+        throw SortDescriptorError.invalidKey
     }
 }

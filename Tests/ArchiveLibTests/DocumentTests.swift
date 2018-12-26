@@ -167,14 +167,44 @@ class DocumentTests: XCTestCase {
         // setup
         let document1 = Document(path: URL(fileURLWithPath: "~/Downloads/2018-05-12--aaa-example-description__tag1_tag2.pdf"), tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
         let document2 = Document(path: URL(fileURLWithPath: "~/Downloads/2018-05-12--bbb-example-description__tag1_tag2.pdf"), tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
-        let document3 = Document(path: URL(fileURLWithPath: "~/Downloads/2010-05-12--aaa-example-description__tag1_tag2.pdf"), tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
-
+        let document3 = Document(path: URL(fileURLWithPath: "~/Downloads/2010-05-12--aaa-example-description__tag1_tag2.pdf"), tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .untagged)
+        let invalidSortDescriptor = NSSortDescriptor(key: "test", ascending: true)
+        let filenameSortDescriptor1 = NSSortDescriptor(key: "filename", ascending: true)
+        let filenameSortDescriptor2 = NSSortDescriptor(key: "filename", ascending: false)
+        let taggingStatusSortDescriptor1 = NSSortDescriptor(key: "taggingStatus", ascending: true)
+        let taggingStatusSortDescriptor2 = NSSortDescriptor(key: "taggingStatus", ascending: false)
+        
+        let documents = [document1, document2, document3]
+        
+        // calculate
+        guard let sortedDocuments1 = try? sort(documents, by: [filenameSortDescriptor1]) else { XCTFail(); return }
+        guard let sortedDocuments2 = try? sort(documents, by: [filenameSortDescriptor2]) else { XCTFail(); return }
+        guard let sortedDocuments3 = try? sort(documents, by: [taggingStatusSortDescriptor1, filenameSortDescriptor1]) else { XCTFail(); return }
+        guard let sortedDocuments4 = try? sort(documents, by: [taggingStatusSortDescriptor2, filenameSortDescriptor1]) else { XCTFail(); return }
+        
         // assert
         // sort by date
         XCTAssertTrue(document3 < document1)
         // sort by filename
         XCTAssertTrue(document2 < document1)
-
+        // invalid sort descriptor
+        XCTAssertThrowsError(try sort(documents, by: [invalidSortDescriptor]))
+        // filename sort descriptor ascending
+        XCTAssertEqual(sortedDocuments1[0], document3)
+        XCTAssertEqual(sortedDocuments1[1], document1)
+        XCTAssertEqual(sortedDocuments1[2], document2)
+        // filename sort descriptor descending
+        XCTAssertEqual(sortedDocuments2[0], document2)
+        XCTAssertEqual(sortedDocuments2[1], document1)
+        XCTAssertEqual(sortedDocuments2[2], document3)
+        // tagging status sort descriptor ascending
+        XCTAssertEqual(sortedDocuments3[0], document3)
+        XCTAssertEqual(sortedDocuments3[1], document1)
+        XCTAssertEqual(sortedDocuments3[2], document2)
+        // tagging status sort descriptor ascending
+        XCTAssertEqual(sortedDocuments4[0], document1)
+        XCTAssertEqual(sortedDocuments4[1], document2)
+        XCTAssertEqual(sortedDocuments4[2], document3)
     }
 
     func testComparable() {

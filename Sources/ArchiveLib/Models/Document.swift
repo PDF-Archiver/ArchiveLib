@@ -294,12 +294,12 @@ extension Document: Searchable {
 }
 
 extension Document: CustomComparable {
-    public func isBefore(_ other: Document, _ sort: NSSortDescriptor) -> Bool {
+    public func isBefore(_ other: Document, _ sort: NSSortDescriptor) throws -> Bool {
         if sort.key == "filename" {
             return sort.ascending ? filename < other.filename : filename > other.filename
         } else if sort.key == "taggingStatus" {
             return sort.ascending ? taggingStatus < other.taggingStatus : taggingStatus > other.taggingStatus
         }
-        return false
+        throw SortDescriptorError.invalidKey
     }
 }

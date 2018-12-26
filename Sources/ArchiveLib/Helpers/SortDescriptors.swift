@@ -18,7 +18,7 @@ public protocol CustomComparable {
     ///   - other: Object that should be used for comparison.
     ///   - sortDescriptor: NSSortDescriptor that should be used by comparison.
     /// - Returns: Comparison result.
-    func isBefore(_ other: Self, _ sortDescriptor: NSSortDescriptor) -> Bool
+    func isBefore(_ other: Self, _ sortDescriptor: NSSortDescriptor) throws -> Bool
 }
 
 /// Sort items by some sort descriptors.
@@ -27,12 +27,19 @@ public protocol CustomComparable {
 ///   - items: Items that should be sorted.
 ///   - sortDescriptors: Descriptors that specify the sorting.
 /// - Returns: Sorted items.
-public func sort<Type: CustomComparable>(_ items: [Type], by sortDescriptors: [NSSortDescriptor]) -> [Type] {
-    return items.sorted { (lhs, rhs) -> Bool in
+public func sort<Type: CustomComparable>(_ items: [Type], by sortDescriptors: [NSSortDescriptor]) throws -> [Type] {
+    return try items.sorted { (lhs, rhs) -> Bool in
         for sortDescriptor in sortDescriptors {
-            if lhs.isBefore(rhs, sortDescriptor) { return true }
-            if rhs.isBefore(lhs, sortDescriptor) { return false }
+            if try lhs.isBefore(rhs, sortDescriptor) { return true }
+            if try rhs.isBefore(lhs, sortDescriptor) { return false }
         }
         return false
     }
+}
+
+/// Error which might be thrown in the SortDescriptor.
+///
+/// - invalidKey: Error that will be thrown, if an invalid key was found in the sort descriptor.
+public enum SortDescriptorError: Error {
+    case invalidKey
 }
