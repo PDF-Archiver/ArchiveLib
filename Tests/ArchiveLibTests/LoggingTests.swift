@@ -12,14 +12,14 @@ class TestLogging: Logging {
 }
 
 class LoggingTests: XCTestCase {
-    
+
     func testLogging() {
-        
+
         // setup
         let logObject = TestLogging()
-        
+
         // calculate
-        
+
         // assert
         XCTAssertNotNil(logObject.log)
     }
