@@ -21,7 +21,7 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
         return tagManager.getAvailableTags(with: searchterms)
     }
 
-    public func remove(_ name: String) {
+    public func removeTag(_ name: String) {
         tagManager.remove(name)
     }
 
