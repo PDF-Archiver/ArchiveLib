@@ -193,8 +193,8 @@ class ArchiveTests: XCTestCase {
         _ = archive.add("tagTest3", count: 3)
 
         // calculate
-        archive.remove("tagTest1")
-        archive.remove("tagTest3")
+        archive.removeTag("tagTest1")
+        archive.removeTag("tagTest3")
 
         // assert
         XCTAssertEqual(archive.getAvailableTags(with: []).count, 2)
