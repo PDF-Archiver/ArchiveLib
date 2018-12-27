@@ -8,10 +8,6 @@
 import Foundation
 import os.log
 
-public protocol ArchiveDelegate: class {
-    func update(_ contentType: ContentType)
-}
-
 public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
 
     private let taggedDocumentManager = DocumentManager()

@@ -14,6 +14,7 @@
 <a href="https://codecov.io/gh/PDF-Archiver/ArchiveLib">
 <img src="https://codecov.io/gh/PDF-Archiver/ArchiveLib/branch/develop/graph/badge.svg">
 </a>
+<a href="https://codeclimate.com/github/PDF-Archiver/ArchiveLib/maintainability"><img src="https://api.codeclimate.com/v1/badges/91e16ceb1e5de7fb8703/maintainability" /></a>
 </div>
 
 
