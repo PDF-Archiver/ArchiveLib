@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol DocumentManagerHandling: class {
+public protocol DocumentManagerHandling: AnyObject {
     var years: Set<String> { get }
 
     func get(scope: SearchScope, searchterms: [String], status: TaggingStatus) -> Set<Document>

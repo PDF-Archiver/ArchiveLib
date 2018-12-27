@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol TagManagerHandling: class {
+public protocol TagManagerHandling: AnyObject {
     func getAvailableTags(with searchterms: [String]) -> Set<Tag>
     func remove(_ name: String)
     func add(_ name: String, count: Int) -> Tag
