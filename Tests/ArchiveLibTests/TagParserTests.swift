@@ -10,7 +10,7 @@ import XCTest
 
 class TagParserTests: XCTestCase {
 
-    func testParsingValidDate() {
+    func testParsingValidTags() {
 
         // setup the raw string
         let longText = """
@@ -21,7 +21,26 @@ class TagParserTests: XCTestCase {
         At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
         """
         let rawStringMapping: [String: Set<String>] = [
-            longText: Set()
+            longText: Set(),
+            "This is a IKEA tradfri bulb!": Set(["ikea"]),
+            "Bill of an Apple MacBook.": Set(["apple", "macbook"])
+        ]
+
+        for (raw, referenceTags) in rawStringMapping {
+
+            // calculate
+            let tags = TagParser.parse(raw)
+
+            // assert
+            XCTAssertEqual(tags, referenceTags)
+        }
+    }
+
+    func testParsingInvalidTags() {
+
+        // setup the raw string
+        let rawStringMapping: [String: Set<String>] = [
+            "Die DKB ist eine Bank.": Set()
         ]
 
         for (raw, referenceTags) in rawStringMapping {

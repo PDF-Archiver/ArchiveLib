@@ -14,6 +14,8 @@ import NaturalLanguage
 @available(OSXApplicationExtension 10.14, *)
 public enum TagParser {
 
+    private static let seperator = "-"
+
     /// Get tag names from a string.
     ///
     /// - Parameter raw: Raw string which might contain some tags.
@@ -23,16 +25,22 @@ public enum TagParser {
 
         let tagger = NLTagger(tagSchemes: [.nameType])
         tagger.string = text
-//        let options: NLTagger.Options = [.omitWords, .omitPunctuation, .omitWhitespace, .omitOther, .joinNames, .joinContractions]
-        let options: NLTagger.Options = [.omitPunctuation, .omitWhitespace, .omitOther, .joinNames, .joinContractions]
+        let options: NLTagger.Options = [.omitPunctuation, .omitWhitespace, .omitOther, .joinContractions]
 
         let tags: [NLTag] = [.organizationName]
         tagger.enumerateTags(in: text.startIndex..<text.endIndex, unit: .word, scheme: .nameType, options: options) { tag, tokenRange in
             if let tag = tag,
                 tags.contains(tag) {
 
-                // append the found tag
-                documentTags.insert(String(text[tokenRange]))
+                // slugify tag
+                let foundTagName = String(text[tokenRange]).lowercased().slugified(withSeparator: seperator)
+
+                // validate the found tag:
+                // * should not contain any sperators, since this is a hint on duplicates, e.g. "zalando" vs. "zalando se"
+                // * should have more than 2 characters
+                if !foundTagName.contains(seperator) && foundTagName.count > 2 {
+                    documentTags.insert(foundTagName)
+                }
             }
             return true
         }
