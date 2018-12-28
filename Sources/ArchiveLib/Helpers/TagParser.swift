@@ -10,6 +10,7 @@ import Foundation
 import NaturalLanguage
 
 /// Parse tags from a String.
+@available(iOSApplicationExtension 12.0, *)
 @available(OSXApplicationExtension 10.14, *)
 public enum TagParser {
 
@@ -22,18 +23,15 @@ public enum TagParser {
 
         let tagger = NLTagger(tagSchemes: [.nameType])
         tagger.string = text
-//        let options: NLTagger.Options = [.omitPunctuation, .omitWhitespace, .joinNames]
 //        let options: NLTagger.Options = [.omitWords, .omitPunctuation, .omitWhitespace, .omitOther, .joinNames, .joinContractions]
         let options: NLTagger.Options = [.omitPunctuation, .omitWhitespace, .omitOther, .joinNames, .joinContractions]
-//        let options: NLTagger.Options = []
 
         let tags: [NLTag] = [.organizationName]
         tagger.enumerateTags(in: text.startIndex..<text.endIndex, unit: .word, scheme: .nameType, options: options) { tag, tokenRange in
             if let tag = tag,
                 tags.contains(tag) {
 
-//                print("\(text[tokenRange]): \(tag.rawValue)")
-
+                // append the found tag
                 documentTags.insert(String(text[tokenRange]))
             }
             return true
