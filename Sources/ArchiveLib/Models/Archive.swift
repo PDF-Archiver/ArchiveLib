@@ -63,12 +63,21 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
         return scopeFilteredDocuments.intersection(termFilteredDocuments)
     }
 
-    public func add(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus) {
+    public func add(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus, parseContent: Bool = false) {
         let newDocument = Document(path: path, tagManager: tagManager, size: size, downloadStatus: downloadStatus, taggingStatus: status)
         switch status {
         case .tagged:
             taggedDocumentManager.add(newDocument)
         case .untagged:
+
+            if parseContent {
+                // parse the document content, which might updates the date and tags
+                DispatchQueue.global(qos: .userInitiated).async {
+                    newDocument.parseContent()
+                }
+            }
+
+            // add the document to the untagged documents
             untaggedDocumentManager.add(newDocument)
         }
     }
@@ -123,12 +132,21 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
         taggedDocumentManager.add(document)
     }
 
-    public func update(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus) -> Document {
+    public func update(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus, parseContent: Bool = false) -> Document {
         let updatedDocument = Document(path: path, tagManager: tagManager, size: size, downloadStatus: downloadStatus, taggingStatus: status)
         switch status {
         case .tagged:
             taggedDocumentManager.update(updatedDocument)
         case .untagged:
+
+            if parseContent {
+                // parse the document content, which might updates the date and tags
+                DispatchQueue.global(qos: .userInitiated).async {
+                    updatedDocument.parseContent()
+                }
+            }
+
+            // add the document to the untagged documents
             untaggedDocumentManager.update(updatedDocument)
         }
         return updatedDocument
