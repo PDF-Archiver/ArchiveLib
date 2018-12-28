@@ -224,7 +224,10 @@ public class Document: Logging {
     /// ATTENTION: This method needs security access!
     ///
     /// - Parameter tagManager: TagManager that will be used when adding new tags.
-    public func parseContent() {
+    public func parseContent(_ options: ParsingOptions) {
+
+        // skip the calculations if the OptionSet is empty
+        guard !options.isEmpty else { return }
 
         // get the pdf content of every page
         guard let pdfDocument = PDFDocument(url: path) else { return }
@@ -240,11 +243,23 @@ public class Document: Logging {
         guard !text.isEmpty else { return }
 
         // parse the date
-        if let parsed = DateParser.parse(text) {
+        if options.contains(.date),
+            let parsed = DateParser.parse(text) {
            date = parsed.date
         }
 
-        // TODO: parse the tags
+        // parse the tags
+        if #available(iOS 12.0, OSX 10.14, *),
+            options.contains(.tags) {
+
+            // get new tags
+            let newTags = TagParser.parse(text)
+
+            // add tags to the document
+            for newTag in newTags.subtracting(tags.map { $0.name }) {
+                tags.insert(tagManager.add(newTag))
+            }
+        }
     }
 
     /// Rename this document and save in in the archive path.
