@@ -63,12 +63,26 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
         return scopeFilteredDocuments.intersection(termFilteredDocuments)
     }
 
-    public func add(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus) {
+    public func add(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus, parse parsingOptions: ParsingOptions = []) {
         let newDocument = Document(path: path, tagManager: tagManager, size: size, downloadStatus: downloadStatus, taggingStatus: status)
         switch status {
         case .tagged:
             taggedDocumentManager.add(newDocument)
         case .untagged:
+
+            if !parsingOptions.isEmpty {
+
+                // parse the document content, which might updates the date and tags
+                if parsingOptions.contains(.mainThread) {
+                    newDocument.parseContent(parsingOptions)
+                } else {
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        newDocument.parseContent(parsingOptions)
+                    }
+                }
+            }
+
+            // add the document to the untagged documents
             untaggedDocumentManager.add(newDocument)
         }
     }
@@ -123,12 +137,21 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
         taggedDocumentManager.add(document)
     }
 
-    public func update(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus) -> Document {
+    public func update(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus, parse parsingOptions: ParsingOptions = []) -> Document {
         let updatedDocument = Document(path: path, tagManager: tagManager, size: size, downloadStatus: downloadStatus, taggingStatus: status)
         switch status {
         case .tagged:
             taggedDocumentManager.update(updatedDocument)
         case .untagged:
+
+            if !parsingOptions.isEmpty {
+                // parse the document content, which might updates the date and tags
+                DispatchQueue.global(qos: .userInitiated).async {
+                    updatedDocument.parseContent(parsingOptions)
+                }
+            }
+
+            // add the document to the untagged documents
             untaggedDocumentManager.update(updatedDocument)
         }
         return updatedDocument
@@ -160,4 +183,19 @@ public enum ContentType: Equatable {
     case tags
     case untaggedDocuments
     case archivedDocuments(updatedDocuments: Set<Document>)
+}
+
+public struct ParsingOptions: OptionSet {
+    public let rawValue: Int
+
+    public static let date = ParsingOptions(rawValue: 1 << 0)
+    public static let tags = ParsingOptions(rawValue: 1 << 1)
+
+    public static let mainThread = ParsingOptions(rawValue: 1 << 2)
+
+    public static let all: ParsingOptions = [.date, .tags]
+
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
 }

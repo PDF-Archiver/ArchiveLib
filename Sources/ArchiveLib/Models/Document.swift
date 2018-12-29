@@ -7,6 +7,11 @@
 
 import Foundation
 import os.log
+#if os(OSX)
+import Quartz
+#else
+import PDFKit
+#endif
 
 /// Download status of a file.
 ///
@@ -85,6 +90,9 @@ public class Document: Logging {
             .joined(separator: " ")
     }
 
+    // MARK: private properties
+    private let tagManager: TagManager
+
     /// Create a new document, which contains the main information (date, specification, tags) of the ArchiveLib.
     /// New documents should only be created by the DocumentManager in this package.
     ///
@@ -93,13 +101,14 @@ public class Document: Logging {
     ///   - availableTags: Currently available tags in archive.
     ///   - byteSize: Size of this documen in number of bytes.
     ///   - documentDownloadStatus: Download status of the document.
-    init(path documentPath: URL, tagManager: TagManager, size byteSize: Int64?, downloadStatus documentDownloadStatus: DownloadStatus, taggingStatus documentTaggingStatus: TaggingStatus) {
+    init(path documentPath: URL, tagManager documentTagManager: TagManager, size byteSize: Int64?, downloadStatus documentDownloadStatus: DownloadStatus, taggingStatus documentTaggingStatus: TaggingStatus) {
 
         path = documentPath
         filename = documentPath.lastPathComponent
         folder = documentPath.deletingLastPathComponent().lastPathComponent
         downloadStatus = documentDownloadStatus
         taggingStatus = documentTaggingStatus
+        tagManager = documentTagManager
 
         if let byteSize = byteSize {
             size = ByteCountFormatter.string(fromByteCount: byteSize, countStyle: .file)
@@ -209,6 +218,49 @@ public class Document: Logging {
         return (date, specification, tagNames)
     }
 
+    /// Parse the OCR content of the pdf document try to fetch a date and some tags.
+    /// This overrides the current date and appends the new tags.
+    ///
+    /// ATTENTION: This method needs security access!
+    ///
+    /// - Parameter tagManager: TagManager that will be used when adding new tags.
+    public func parseContent(_ options: ParsingOptions) {
+
+        // skip the calculations if the OptionSet is empty
+        guard !options.isEmpty else { return }
+
+        // get the pdf content of every page
+        guard let pdfDocument = PDFDocument(url: path) else { return }
+        var text = ""
+        for index in 0 ..< pdfDocument.pageCount {
+            guard let page = pdfDocument.page(at: index),
+                let pageContent = page.string else { return }
+
+            text += pageContent
+        }
+
+        // verify that we got some pdf content
+        guard !text.isEmpty else { return }
+
+        // parse the date
+        if options.contains(.date),
+            let parsed = DateParser.parse(text) {
+           date = parsed.date
+        }
+
+        // parse the tags
+        if options.contains(.tags) {
+
+            // get new tags
+            let newTags = TagParser.parse(text)
+
+            // add tags to the document
+            for newTag in newTags.subtracting(tags.map { $0.name }) {
+                tags.insert(tagManager.add(newTag))
+            }
+        }
+    }
+
     /// Rename this document and save in in the archive path.
     ///
     /// - Parameters:
@@ -243,24 +295,35 @@ public class Document: Logging {
             os_log("Error while moving file: %@", log: self.log, type: .error, error.description)
             throw DocumentError.renameFailed
         }
+
+        // update document properties
         self.filename = String(newFilepath.lastPathComponent)
         self.path = newFilepath
         self.taggingStatus = .tagged
 
-        #if os(OSX)
+        // save tags
+        saveTagsToFilesystem()
+    }
+
+    /// Save the tags of this document in the filesystem.
+    public func saveTagsToFilesystem() {
+
         do {
-            var tags = [String]()
-            for tag in self.tags {
-                tags += [tag.name]
-            }
+            // get document tags
+            let tags = self.tags
+                .map { $0.name }
+                .sorted()
 
             // set file tags [https://stackoverflow.com/a/47340666]
-            try (newFilepath as NSURL).setResourceValue(tags, forKey: URLResourceKey.tagNamesKey)
+            #if os(OSX)
+            try (path as NSURL).setResourceValue(tags, forKey: URLResourceKey.tagNamesKey)
+            //#else
+            // TODO: add iOS implementation here
+            #endif
 
         } catch let error as NSError {
             os_log("Could not set file: %@", log: self.log, type: .error, error.description)
         }
-        #endif
     }
 }
 

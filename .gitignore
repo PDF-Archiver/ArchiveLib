@@ -2,3 +2,5 @@
 /.build
 /Packages
 ArchiveLib.xcodeproj/xcshareddata
+ArchiveLib.xcworkspace
+ArchiveLib.playground

@@ -11,11 +11,11 @@ public protocol DocumentManagerHandling: AnyObject {
     var years: Set<String> { get }
 
     func get(scope: SearchScope, searchterms: [String], status: TaggingStatus) -> Set<Document>
-    func add(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus)
+    func add(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus, parse: ParsingOptions)
     func remove(_ removableDocuments: Set<Document>)
     func removeAll(_ status: TaggingStatus)
     func update(_ document: Document)
-    func update(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus) -> Document
+    func update(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus, parse: ParsingOptions) -> Document
     func archive(_ document: Document)
 }
 

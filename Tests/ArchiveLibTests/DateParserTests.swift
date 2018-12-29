@@ -27,11 +27,37 @@ class DateParserTests: XCTestCase {
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
         At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
         """
-        let rawStringMapping = ["2015-05-12": dateFormatter.date(from: "2015-05-12"),
+        let rawStringMapping = ["n16072018n": dateFormatter.date(from: "2018-07-16"),
+                                "Berlin16072018test": dateFormatter.date(from: "2018-07-16"),
+                                "Berlin16072018": dateFormatter.date(from: "2018-07-16"),
+                                "12.05.2015": dateFormatter.date(from: "2015-05-12"),
+                                "12-05-2015": dateFormatter.date(from: "2015-05-12"),
+                                "2015-05-12": dateFormatter.date(from: "2015-05-12"),
                                 "1990_02_11": dateFormatter.date(from: "1990-02-11"),
                                 "20050201": dateFormatter.date(from: "2005-02-01"),
                                 "2010_05_12_15_17": dateFormatter.date(from: "2010-05-12"),
-                                longText: dateFormatter.date(from: "2005-02-01")]
+                                longText: dateFormatter.date(from: "2005-02-01")
+        ]
+
+        for (raw, date) in rawStringMapping {
+
+            // calculate
+            let parsedOutput = DateParser.parse(raw)
+
+            // assert
+            if let parsedOutput = parsedOutput {
+                XCTAssertEqual(parsedOutput.date, date)
+            } else {
+                XCTFail("No date was found, this should not happen in this test.")
+            }
+        }
+    }
+
+    func testParsingambiguousDate() {
+
+        // setup the raw string
+        let rawStringMapping = ["20150203": dateFormatter.date(from: "2015-02-03"),
+                                "02.03.2015": dateFormatter.date(from: "2015-03-02")]
 
         for (raw, date) in rawStringMapping {
 
@@ -50,9 +76,12 @@ class DateParserTests: XCTestCase {
     func testParsingInvalidDates() {
 
         // setup the raw string
-        let rawStrings = ["2015-35-12",
+        let rawStrings = ["12.05-2020",
+                          "2015-35-12",
                           "199002_11",
-                          "20050232"]
+                          "122005023212",
+                          "20050232",
+                          "Berlin16072018666"]
 
         for raw in rawStrings {
 
