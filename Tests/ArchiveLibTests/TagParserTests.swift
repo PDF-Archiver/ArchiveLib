@@ -32,7 +32,11 @@ class TagParserTests: XCTestCase {
             let tags = TagParser.parse(raw)
 
             // assert
-            XCTAssertEqual(tags, referenceTags)
+            if #available(iOS 12.0, OSX 10.14, *) {
+                XCTAssertEqual(tags, referenceTags)
+            } else {
+                XCTAssertEqual(tags, Set())
+            }
         }
     }
 
