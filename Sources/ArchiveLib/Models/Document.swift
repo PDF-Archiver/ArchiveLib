@@ -296,24 +296,35 @@ public class Document: Logging {
             os_log("Error while moving file: %@", log: self.log, type: .error, error.description)
             throw DocumentError.renameFailed
         }
+
+        // update document properties
         self.filename = String(newFilepath.lastPathComponent)
         self.path = newFilepath
         self.taggingStatus = .tagged
 
-        #if os(OSX)
+        // save tags
+        saveTagsToFilesystem()
+    }
+
+    /// Save the tags of this document in the filesystem.
+    public func saveTagsToFilesystem() {
+
         do {
-            var tags = [String]()
-            for tag in self.tags {
-                tags += [tag.name]
-            }
+            // get document tags
+            let tags = self.tags
+                .map { $0.name }
+                .sorted()
 
             // set file tags [https://stackoverflow.com/a/47340666]
-            try (newFilepath as NSURL).setResourceValue(tags, forKey: URLResourceKey.tagNamesKey)
+            #if os(OSX)
+            try (path as NSURL).setResourceValue(tags, forKey: URLResourceKey.tagNamesKey)
+            //#else
+            // TODO: add iOS implementation here
+            #endif
 
         } catch let error as NSError {
             os_log("Could not set file: %@", log: self.log, type: .error, error.description)
         }
-        #endif
     }
 }
 
