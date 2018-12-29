@@ -249,8 +249,7 @@ public class Document: Logging {
         }
 
         // parse the tags
-        if #available(iOS 12.0, OSX 10.14, *),
-            options.contains(.tags) {
+        if options.contains(.tags) {
 
             // get new tags
             let newTags = TagParser.parse(text)

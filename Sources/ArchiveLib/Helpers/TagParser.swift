@@ -10,8 +10,6 @@ import Foundation
 import NaturalLanguage
 
 /// Parse tags from a String.
-@available(iOSApplicationExtension 12.0, *)
-@available(OSXApplicationExtension 10.14, *)
 public enum TagParser {
 
     private static let seperator = "-"
@@ -23,26 +21,28 @@ public enum TagParser {
     public static func parse(_ text: String) -> Set<String> {
         var documentTags = Set<String>()
 
-        let tagger = NLTagger(tagSchemes: [.nameType])
-        tagger.string = text
-        let options: NLTagger.Options = [.omitPunctuation, .omitWhitespace, .omitOther, .joinContractions]
+        if #available(iOS 12.0, OSX 10.14, *) {
+            let tagger = NLTagger(tagSchemes: [.nameType])
+            tagger.string = text
+            let options: NLTagger.Options = [.omitPunctuation, .omitWhitespace, .omitOther, .joinContractions]
 
-        let tags: [NLTag] = [.organizationName]
-        tagger.enumerateTags(in: text.startIndex..<text.endIndex, unit: .word, scheme: .nameType, options: options) { tag, tokenRange in
-            if let tag = tag,
-                tags.contains(tag) {
+            let tags: [NLTag] = [.organizationName]
+            tagger.enumerateTags(in: text.startIndex..<text.endIndex, unit: .word, scheme: .nameType, options: options) { tag, tokenRange in
+                if let tag = tag,
+                    tags.contains(tag) {
 
-                // slugify tag
-                let foundTagName = String(text[tokenRange]).lowercased().slugified(withSeparator: seperator)
+                    // slugify tag
+                    let foundTagName = String(text[tokenRange]).lowercased().slugified(withSeparator: seperator)
 
-                // validate the found tag:
-                // * should not contain any sperators, since this is a hint on duplicates, e.g. "zalando" vs. "zalando se"
-                // * should have more than 2 characters
-                if !foundTagName.contains(seperator) && foundTagName.count > 2 {
-                    documentTags.insert(foundTagName)
+                    // validate the found tag:
+                    // * should not contain any sperators, since this is a hint on duplicates, e.g. "zalando" vs. "zalando se"
+                    // * should have more than 2 characters
+                    if !foundTagName.contains(seperator) && foundTagName.count > 2 {
+                        documentTags.insert(foundTagName)
+                    }
                 }
+                return true
             }
-            return true
         }
 
         return documentTags
