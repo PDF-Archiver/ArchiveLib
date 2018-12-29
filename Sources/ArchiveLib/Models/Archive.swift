@@ -71,9 +71,14 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
         case .untagged:
 
             if !parsingOptions.isEmpty {
+
                 // parse the document content, which might updates the date and tags
-                DispatchQueue.global(qos: .userInitiated).async {
+                if parsingOptions.contains(.mainThread) {
                     newDocument.parseContent(parsingOptions)
+                } else {
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        newDocument.parseContent(parsingOptions)
+                    }
                 }
             }
 
@@ -185,6 +190,8 @@ public struct ParsingOptions: OptionSet {
 
     public static let date = ParsingOptions(rawValue: 1 << 0)
     public static let tags = ParsingOptions(rawValue: 1 << 1)
+
+    public static let mainThread = ParsingOptions(rawValue: 1 << 2)
 
     public static let all: ParsingOptions = [.date, .tags]
 
