@@ -36,6 +36,8 @@ class DateParserTests: XCTestCase {
                                 "1990_02_11": dateFormatter.date(from: "1990-02-11"),
                                 "20050201": dateFormatter.date(from: "2005-02-01"),
                                 "2010_05_12_15_17": dateFormatter.date(from: "2010-05-12"),
+                                "09/10/2018": dateFormatter.date(from: "2018-10-09"),
+                                "nn09/10/2018nn": dateFormatter.date(from: "2018-10-09"),
                                 longText: dateFormatter.date(from: "2005-02-01")
         ]
 

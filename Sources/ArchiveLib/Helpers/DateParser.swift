@@ -23,6 +23,7 @@ public enum DateParser {
     private static var mappings: [FormatMapping] = [
         (format: "dd.MM.yyyy", regex: "\(Regex.day.rawValue)\\.\(Regex.month.rawValue)\\.\(Regex.year.rawValue)"),
         (format: "dd-MM-yyyy", regex: "\(Regex.day.rawValue)-\(Regex.month.rawValue)-\(Regex.year.rawValue)"),
+        (format: "dd/MM/yyyy", regex: "\(Regex.day.rawValue)/\(Regex.month.rawValue)/\(Regex.year.rawValue)"),
         (format: "dd MM yyyy", regex: "\(Regex.day.rawValue)\\s\(Regex.month.rawValue)\\s\(Regex.year.rawValue)"),
         (format: "ddMMyyyy", regex: "\(Regex.day.rawValue)\(Regex.day.rawValue)\(Regex.year.rawValue)"),
         (format: "yyyy-MM-dd", regex: "\(Regex.year.rawValue)-\(Regex.month.rawValue)-\(Regex.day.rawValue)"),
