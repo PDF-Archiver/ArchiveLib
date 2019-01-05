@@ -258,9 +258,9 @@ class DocumentTests: XCTestCase {
         XCTAssertEqual(document.tags.count, 3)
         XCTAssertTrue(document.tags.contains(tag1))
         XCTAssertTrue(document.tags.contains(tag2))
-        XCTAssertTrue(tagManager.availableTags.contains { $0.name == "tag1" && $0.count == 2 }, "The count of 'tag1' should be incremented, but actually wasn't.")
-        XCTAssertTrue(tagManager.availableTags.contains { $0.name == "tag2" && $0.count == 3 }, "The count of 'tag2' should be incremented, but actually wasn't.")
-        XCTAssertTrue(tagManager.availableTags.contains { $0.name == "tag4" && $0.count == 1 }, "The count of 'tag4' should be incremented, but actually wasn't.")
+        XCTAssertTrue(tagManager.getAvailableTags(with: []).contains { $0.name == "tag1" && $0.count == 2 }, "The count of 'tag1' should be incremented, but actually wasn't.")
+        XCTAssertTrue(tagManager.getAvailableTags(with: []).contains { $0.name == "tag2" && $0.count == 3 }, "The count of 'tag2' should be incremented, but actually wasn't.")
+        XCTAssertTrue(tagManager.getAvailableTags(with: []).contains { $0.name == "tag4" && $0.count == 1 }, "The count of 'tag4' should be incremented, but actually wasn't.")
         XCTAssertEqual(document.date, dateFormatter.date(from: "2010-05-12"))
     }
 
