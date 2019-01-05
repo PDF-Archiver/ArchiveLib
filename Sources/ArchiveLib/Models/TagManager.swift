@@ -16,35 +16,35 @@ public protocol TagManagerHandling: AnyObject {
 
 class TagManager {
 
-    var availableTags = Set<Tag>()
+    private var availableTags = Atomic(Set<Tag>())
 
     func getAvailableTags(with searchterms: [String]) -> Set<Tag> {
         if searchterms.joined().isEmpty {
-            return availableTags
+            return availableTags.value
         } else {
             return filterBy(searchterms)
         }
     }
 
     func remove(_ name: String) {
-        if let availableTag = availableTags.first(where: { $0.name == name }) {
+        if let availableTag = availableTags.value.first(where: { $0.name == name }) {
             if availableTag.count <= 1 {
-                availableTags.subtract(Set([availableTag]))
+                availableTags.mutate { $0.subtract(Set([availableTag])) }
             } else {
                 availableTag.count -= 1
-                availableTags.update(with: availableTag)
+                availableTags.mutate { $0.update(with: availableTag) }
             }
         }
     }
 
     func add(_ name: String, count: Int = 1) -> Tag {
-        if let availableTag = availableTags.first(where: { $0.name == name }) {
+        if let availableTag = availableTags.value.first(where: { $0.name == name }) {
             availableTag.count += count
-            availableTags.update(with: availableTag)
+            availableTags.mutate { $0.update(with: availableTag) }
             return availableTag
         } else {
             let newTag = Tag(name: name, count: count)
-            availableTags.insert(newTag)
+            availableTags.mutate { $0.insert(newTag) }
             return newTag
         }
     }
@@ -55,6 +55,6 @@ extension TagManager: Searcher {
     typealias Element = Tag
 
     var allSearchElements: Set<Tag> {
-        return availableTags
+        return availableTags.value
     }
 }

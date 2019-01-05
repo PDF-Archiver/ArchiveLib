@@ -32,7 +32,7 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
     // MARK: - DocumentHandling implementation
     public var years: Set<String> {
         var years = Set<String>()
-        for document in taggedDocumentManager.documents {
+        for document in taggedDocumentManager.documents.value {
             years.insert(document.folder)
         }
         return years
@@ -97,14 +97,9 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
         }
 
         // remove documents
-        for document in removableDocuments {
-            switch document.taggingStatus {
-            case .tagged:
-                taggedDocumentManager.remove(document)
-            case .untagged:
-                untaggedDocumentManager.remove(document)
-            }
-        }
+        let taggedDocuments = removableDocuments.filter { $0.taggingStatus == .tagged }
+        taggedDocumentManager.remove(taggedDocuments)
+        untaggedDocumentManager.remove(removableDocuments.subtracting(taggedDocuments))
     }
 
     public func removeAll(_ status: TaggingStatus) {
@@ -119,8 +114,7 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
         }
 
         // remove the documents
-        let allRemovableDocuments = documentManager.documents
-        remove(allRemovableDocuments)
+        documentManager.removeAll()
     }
 
     public func update(_ document: Document) {
