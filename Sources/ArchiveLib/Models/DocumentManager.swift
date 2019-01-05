@@ -21,14 +21,14 @@ public protocol DocumentManagerHandling: AnyObject {
 
 class DocumentManager: Logging {
 
-    var documents = Set<Document>()
+    var documents = Atomic(Set<Document>())
 
     func add(_ addedDocument: Document) {
         add(Set([addedDocument]))
     }
 
     func add(_ addedDocuments: Set<Document>) {
-        documents.formUnion(addedDocuments)
+        documents.mutate { $0.formUnion(addedDocuments) }
     }
 
     func remove(_ removableDocument: Document) {
@@ -36,15 +36,15 @@ class DocumentManager: Logging {
     }
 
     func remove(_ removableDocuments: Set<Document>) {
-        documents.subtract(removableDocuments)
+        documents.mutate { $0.subtract(removableDocuments) }
     }
 
     func removeAll() {
-        documents = Set<Document>()
+        documents.mutate { $0 = Set<Document>() }
     }
 
     func update(_ updatedDocument: Document) {
-        documents.update(with: updatedDocument)
+        documents.mutate { $0.update(with: updatedDocument) }
     }
 }
 
@@ -52,7 +52,7 @@ extension DocumentManager: Searcher {
     typealias Element = Document
 
     var allSearchElements: Set<Document> {
-        return documents
+        return documents.value
     }
 }
 
