@@ -50,6 +50,8 @@
 		A3F3DAD321B3EE990004EFF6 /* TagManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3DAD121B3EE990004EFF6 /* TagManager.swift */; };
 		A3F5D63721E0C0D200825CE0 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F5D63621E0C0D200825CE0 /* Atomic.swift */; };
 		A3F5D63821E0C0D200825CE0 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F5D63621E0C0D200825CE0 /* Atomic.swift */; };
+		A3F5D63A21E0CCC400825CE0 /* AtomicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F5D63921E0CCC400825CE0 /* AtomicTests.swift */; };
+		A3F5D63B21E0CCC400825CE0 /* AtomicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F5D63921E0CCC400825CE0 /* AtomicTests.swift */; };
 		OBJ_34 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* Document.swift */; };
 		OBJ_35 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* Tag.swift */; };
 		OBJ_36 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* Logging.swift */; };
@@ -97,6 +99,7 @@
 		A3D631A521B1C34E009FE9C3 /* StringExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionTests.swift; sourceTree = "<group>"; };
 		A3F3DAD121B3EE990004EFF6 /* TagManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagManager.swift; sourceTree = "<group>"; };
 		A3F5D63621E0C0D200825CE0 /* Atomic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
+		A3F5D63921E0CCC400825CE0 /* AtomicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicTests.swift; sourceTree = "<group>"; };
 		"ArchiveLib::ArchiveLib::Product" /* ArchiveLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ArchiveLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_13 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 		OBJ_14 /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
@@ -178,12 +181,12 @@
 		OBJ_15 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				A3F5D63621E0C0D200825CE0 /* Atomic.swift */,
+				A352A11921A481AF001DEAC7 /* DateParser.swift */,
 				OBJ_16 /* Logging.swift */,
 				OBJ_17 /* StringExtensions.swift */,
-				A352A11921A481AF001DEAC7 /* DateParser.swift */,
 				A393ADE121C858A200A96AD2 /* SortDescriptors.swift */,
 				A3B6B11921D67B3B00F7323B /* TagParser.swift */,
-				A3F5D63621E0C0D200825CE0 /* Atomic.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -207,6 +210,7 @@
 		OBJ_21 /* ArchiveLibTests */ = {
 			isa = PBXGroup;
 			children = (
+				A3F5D63921E0CCC400825CE0 /* AtomicTests.swift */,
 				A3A472DA21D3E9A3000B7D79 /* ArchiveTests.swift */,
 				A3D6319F21B14A9B009FE9C3 /* DateParserTests.swift */,
 				A3A472D421D3DD99000B7D79 /* DocumentManagerTests.swift */,
@@ -458,6 +462,7 @@
 				A3D6319C21B13FDD009FE9C3 /* DocumentTests.swift in Sources */,
 				A35D98D021CC3A5B0039E9D4 /* SortDescriptorsTests.swift in Sources */,
 				A3D631A621B1C34E009FE9C3 /* StringExtensionTests.swift in Sources */,
+				A3F5D63A21E0CCC400825CE0 /* AtomicTests.swift in Sources */,
 				A3D631A021B14A9B009FE9C3 /* DateParserTests.swift in Sources */,
 				A3A472DB21D3E9A3000B7D79 /* ArchiveTests.swift in Sources */,
 				A306673721A49F6500378032 /* SearchTests.swift in Sources */,
@@ -476,6 +481,7 @@
 				A3D6319D21B13FE6009FE9C3 /* DocumentTests.swift in Sources */,
 				A35D98D121CC3A5C0039E9D4 /* SortDescriptorsTests.swift in Sources */,
 				A3D631A721B1C34E009FE9C3 /* StringExtensionTests.swift in Sources */,
+				A3F5D63B21E0CCC400825CE0 /* AtomicTests.swift in Sources */,
 				A3D631A121B14A9B009FE9C3 /* DateParserTests.swift in Sources */,
 				A3A472DC21D3E9A3000B7D79 /* ArchiveTests.swift in Sources */,
 				A306673821A49F6500378032 /* SearchTests.swift in Sources */,

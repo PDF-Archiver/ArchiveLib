@@ -66,7 +66,7 @@ class TagManagerTests: XCTestCase {
         let tag3 = tagManager.filterBy("tag3").first
 
         // assert
-        XCTAssertEqual(tagManager.availableTags.count, 2)
+        XCTAssertEqual(tagManager.getAvailableTags(with: []).count, 2)
         XCTAssertNil(tag1)
         XCTAssertNotNil(tag3)
     }
@@ -85,7 +85,7 @@ class TagManagerTests: XCTestCase {
         let tags4 = tagManager.getAvailableTags(with: [])
 
         // assert
-        XCTAssertEqual(tagManager.availableTags.count, 3)
+        XCTAssertEqual(tagManager.getAvailableTags(with: []).count, 3)
         XCTAssertEqual(tags1, [])
         XCTAssertEqual(tags2.count, 1)
         XCTAssertEqual(tags3.count, 3)

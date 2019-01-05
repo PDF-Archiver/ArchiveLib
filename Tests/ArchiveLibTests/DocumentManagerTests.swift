@@ -35,8 +35,8 @@ class DocumentManagerTests: XCTestCase {
         // calculate
 
         // assert
-        XCTAssertEqual(documentManager.documents.count, 1)
-        XCTAssertEqual(documentManager.documents, Set([document1]))
+        XCTAssertEqual(documentManager.documents.value.count, 1)
+        XCTAssertEqual(documentManager.documents.value, Set([document1]))
     }
 
     func testDocumentAdd2() {
@@ -48,9 +48,9 @@ class DocumentManagerTests: XCTestCase {
         documentManager.add(documents)
 
         // assert
-        XCTAssertEqual(documentManager.documents.count, 3)
+        XCTAssertEqual(documentManager.documents.value.count, 3)
         XCTAssertEqual(documentManager.allSearchElements.count, 3)
-        XCTAssertEqual(documentManager.documents, documents)
+        XCTAssertEqual(documentManager.documents.value, documents)
     }
 
     func testDocumentRemove() {
@@ -63,8 +63,8 @@ class DocumentManagerTests: XCTestCase {
         documentManager.remove(document1)
 
         // assert
-        XCTAssertEqual(documentManager.documents.count, 2)
-        XCTAssertEqual(documentManager.documents, documents.subtracting(Set([document1])))
+        XCTAssertEqual(documentManager.documents.value.count, 2)
+        XCTAssertEqual(documentManager.documents.value, documents.subtracting(Set([document1])))
     }
 
     func testDocumentRemoveAll() {
@@ -77,7 +77,7 @@ class DocumentManagerTests: XCTestCase {
         documentManager.removeAll()
 
         // assert
-        XCTAssertEqual(documentManager.documents.count, 0)
+        XCTAssertEqual(documentManager.documents.value.count, 0)
     }
 
     func testDocumentUpdate() {
@@ -90,10 +90,10 @@ class DocumentManagerTests: XCTestCase {
 
         // calculate
         documentManager.update(document1)
-        guard let updatedDocument = documentManager.documents.first(where: { $0.filename == document1.filename }) else { XCTFail("No document found!"); return }
+        guard let updatedDocument = documentManager.documents.value.first(where: { $0.filename == document1.filename }) else { XCTFail("No document found!"); return }
 
         // assert
-        XCTAssertEqual(documentManager.documents.count, 3)
+        XCTAssertEqual(documentManager.documents.value.count, 3)
         XCTAssertEqual(updatedDocument.filename, document1.filename)
         XCTAssertEqual(updatedDocument.taggingStatus, newTaggingStatus)
     }
