@@ -116,12 +116,26 @@ public class Document: Logging {
 
         // parse the current filename
         let parsedFilename = Document.parseFilename(documentPath)
+        var tmpTags = parsedFilename.tagNames ?? []
 
         // set the date
         date = parsedFilename.date ?? Date()
 
+        // get file tags https://stackoverflow.com/a/47340666
+        #if os(OSX)
+        var resource: AnyObject?
+        try? (path as NSURL).getResourceValue(&resource, forKey: URLResourceKey.tagNamesKey)
+
+        if let resource = resource,
+            let fileTags = resource as? [String] {
+            tmpTags.append(contentsOf: fileTags)
+        }
+        //#else
+        // TODO: add iOS implementation here
+        #endif
+
         // get the available tags of the archive
-        for documentTagName in parsedFilename.tagNames ?? [] {
+        for documentTagName in Set(tmpTags) {
             tags.insert(tagManager.add(documentTagName))
         }
 
