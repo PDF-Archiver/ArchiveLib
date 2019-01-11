@@ -254,8 +254,11 @@ public class Document: Logging {
             // get new tags
             let newTags = TagParser.parse(text)
 
-            // add tags to the document
-            for newTag in newTags.subtracting(tags.map { $0.name }) {
+            // get the already available tags
+            let availableTags = Set(tagManager.allSearchElements.map { $0.name })
+
+            // add all found tags which are already in the archive
+            for newTag in newTags.intersection(availableTags) {
                 tags.insert(tagManager.add(newTag))
             }
         }

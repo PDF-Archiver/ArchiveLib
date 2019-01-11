@@ -26,7 +26,7 @@ public enum TagParser {
             tagger.string = text
             let options: NLTagger.Options = [.omitPunctuation, .omitWhitespace, .omitOther, .joinContractions]
 
-            let tags: [NLTag] = [.organizationName]
+            let tags: [NLTag] = [.personalName, .organizationName, .placeName]
             tagger.enumerateTags(in: text.startIndex..<text.endIndex, unit: .word, scheme: .nameType, options: options) { tag, tokenRange in
                 if let tag = tag,
                     tags.contains(tag) {
