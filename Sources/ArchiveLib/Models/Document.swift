@@ -116,12 +116,26 @@ public class Document: Logging {
 
         // parse the current filename
         let parsedFilename = Document.parseFilename(documentPath)
+        var tmpTags = parsedFilename.tagNames ?? []
 
         // set the date
         date = parsedFilename.date ?? Date()
 
+        // get file tags https://stackoverflow.com/a/47340666
+        #if os(OSX)
+        var resource: AnyObject?
+        try? (path as NSURL).getResourceValue(&resource, forKey: URLResourceKey.tagNamesKey)
+
+        if let resource = resource,
+            let fileTags = resource as? [String] {
+            tmpTags.append(contentsOf: fileTags)
+        }
+        //#else
+        // TODO: add iOS implementation here
+        #endif
+
         // get the available tags of the archive
-        for documentTagName in parsedFilename.tagNames ?? [] {
+        for documentTagName in Set(tmpTags) {
             tags.insert(tagManager.add(documentTagName))
         }
 
@@ -254,8 +268,11 @@ public class Document: Logging {
             // get new tags
             let newTags = TagParser.parse(text)
 
-            // add tags to the document
-            for newTag in newTags.subtracting(tags.map { $0.name }) {
+            // get the already available tags
+            let availableTags = Set(tagManager.allSearchElements.map { $0.name })
+
+            // add all found tags which are already in the archive
+            for newTag in newTags.intersection(availableTags) {
                 tags.insert(tagManager.add(newTag))
             }
         }
@@ -345,7 +362,9 @@ extension Document: Hashable, Comparable, CustomStringConvertible {
     }
 
     // "==" and hashValue must only compare the path to avoid duplicates in sets
-    public var hashValue: Int { return path.hashValue }
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(searchTerm)
+    }
 
     public var description: String { return filename }
 }
