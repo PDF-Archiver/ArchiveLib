@@ -362,7 +362,9 @@ extension Document: Hashable, Comparable, CustomStringConvertible {
     }
 
     // "==" and hashValue must only compare the path to avoid duplicates in sets
-    public var hashValue: Int { return path.hashValue }
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(searchTerm)
+    }
 
     public var description: String { return filename }
 }

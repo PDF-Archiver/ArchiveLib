@@ -36,7 +36,9 @@ extension Tag: Hashable, Comparable, CustomStringConvertible {
     public static func == (lhs: Tag, rhs: Tag) -> Bool {
         return lhs.name == rhs.name
     }
-    public var hashValue: Int { return name.hashValue }
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+    }
     public var description: String { return "\(name) (\(count))" }
 }
 

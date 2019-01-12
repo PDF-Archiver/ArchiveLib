@@ -218,7 +218,6 @@ class DocumentTests: XCTestCase {
 
         // assert
         XCTAssertEqual(document1, document2)
-        XCTAssertEqual(document1.hashValue, document1.path.hashValue)
         XCTAssertEqual(document1.hashValue, document2.hashValue)
     }
 

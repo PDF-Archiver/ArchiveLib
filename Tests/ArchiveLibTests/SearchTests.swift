@@ -10,10 +10,8 @@ import XCTest
 
 class TestElement: Searchable {
     var searchTerm: String
-    let hashValue: Int
 
     init(filename: String) {
-        self.hashValue = filename.hashValue
         self.searchTerm = filename
     }
 
@@ -21,6 +19,9 @@ class TestElement: Searchable {
         return lhs.searchTerm == rhs.searchTerm
     }
 
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(searchTerm)
+    }
 }
 
 class TestSearcher: Searcher {
