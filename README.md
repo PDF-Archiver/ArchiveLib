@@ -20,7 +20,7 @@
 
 # ArchiveLib
 
-ArchiveLib is the backbone and is used in the following apps:
+ArchiveLib is the backbone for the following apps:
 * **macOS:** [PDF Archiver](https://geo.itunes.apple.com/us/app/pdf-archiver/id1352719750?mt=12&app=apps)
 * **iOS:** [PDF Archive Viewer](https://itunes.apple.com/app/apple-store/id1433801905?pt=118993774&ct=GitHub&mt=8)
 
