@@ -51,6 +51,7 @@ class DateParserTests: XCTestCase {
             "6. dec 2020": dateFormatter.date(from: "2020-12-06"),
             "24. December 2020": dateFormatter.date(from: "2020-12-24"),
             "December 25, 2020": dateFormatter.date(from: "2020-12-25"),
+            "05 01 18": dateFormatter.date(from: "2018-01-05"),
             longText: dateFormatter.date(from: "2005-02-01")
         ]
 
