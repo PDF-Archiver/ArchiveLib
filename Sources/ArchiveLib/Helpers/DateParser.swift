@@ -25,9 +25,7 @@ public enum DateParser {
         (first: .month, second: .day, third: .year, likelihood: 0.1)
     ]
     private static let separator = "[\\.\\-\\_\\s\\/,]{0,3}"
-    private static var mappings: [FormatMapping] {
-        return createMappings(for: locales)
-    }
+    private static let mappings: [FormatMapping] = { return createMappings(for: locales) }()
     private static let locales = [Locale(identifier: "de_DE"), Locale(identifier: "en_US")]
 
     // MARK: - public API
