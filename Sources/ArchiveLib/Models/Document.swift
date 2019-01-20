@@ -188,7 +188,10 @@ public class Document: Logging {
         // try to parse the current filename
         var date: Date?
         var rawDate = ""
-        if let parsed = DateParser.parse(path.lastPathComponent) {
+        if let parsed = Document.getFilenameDate(path.lastPathComponent) {
+            date = parsed.date
+            rawDate = parsed.rawDate
+        } else if let parsed = DateParser.parse(path.lastPathComponent) {
             date = parsed.date
             rawDate = parsed.rawDate
         }
@@ -341,6 +344,20 @@ public class Document: Logging {
         } catch let error as NSError {
             os_log("Could not set file: %@", log: self.log, type: .error, error.description)
         }
+    }
+
+    private static func getFilenameDate(_ raw: String) -> (date: Date, rawDate: String)? {
+        if let groups = raw.capturedGroups(withRegex: "([\\d-]+)--") {
+            let rawDate = groups[0]
+
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+
+            if let date = dateFormatter.date(from: rawDate) {
+                return (date, rawDate)
+            }
+        }
+        return nil
     }
 }
 
