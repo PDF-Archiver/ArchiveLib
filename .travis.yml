@@ -4,6 +4,7 @@ osx_image: xcode10.1
 script:
     - swiftlint
     - swift test -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx10.12"
+    - swift test -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx10.14"
     - xcodebuild -scheme ArchiveLib-iOS -project ArchiveLib.xcodeproj -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 8,OS=12.0' build test
 after_success:
   - bash <(curl -s https://codecov.io/bash)

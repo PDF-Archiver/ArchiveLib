@@ -50,3 +50,16 @@ This structure is independent from your OS and filesystem and makes it very easy
 * ... by description via a searchterm like: `-descriptionword`, starting with `-`
 * ... by tag or description via a searchterm like: `searchword`,  starting with the term
 * ... and even the file content: have a look at the [Pro Tips](#pro-tips)!
+
+
+## :interrobang: Help
+* Take a look at the [FAQs](https://pdf-archiver.io/faq).
+* Get in contact with us at [Discord](http://discord.pdf-archiver.io).
+
+
+## :octocat: How to contribute
+Rate the App in the [App Store](https://itunes.apple.com/app/apple-store/id1433801905?pt=118993774&ct=GitHub&mt=8&action=write-review).
+
+All contributions are welcome!
+Feel free to contribute to this project.
+Submit pull requests or contribute tutorials - whatever you have to offer, it would be appreciated!
