@@ -159,23 +159,9 @@ public class Document: Logging {
             throw DocumentError.description
         }
 
-        // get formatted date
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        let dateStr = dateFormatter.string(from: self.date)
+        let filename = Document.createFilename(date: date, specification: specification, tags: tags)
+        let foldername = String(filename.prefix(4))
 
-        // get description
-
-        // get tags
-        var tagStr = ""
-        for tag in Array(tags).sorted(by: { $0.name < $1.name }) {
-            tagStr += "\(tag.name)_"
-        }
-        tagStr = String(tagStr.dropLast(1))
-
-        // create new filepath
-        let filename = "\(dateStr)--\(specification)__\(tagStr).pdf"
-        let foldername = String(dateStr.prefix(4))
         return (foldername, filename)
     }
 
@@ -233,6 +219,25 @@ public class Document: Logging {
         }
 
         return (date, specification, tagNames)
+    }
+
+    public static func createFilename(date: Date, specification: String, tags: Set<Tag>) -> String {
+        // get formatted date
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let dateStr = dateFormatter.string(from: date)
+
+        // get description
+
+        // get tags
+        var tagStr = ""
+        for tag in Array(tags).sorted(by: { $0.name < $1.name }) {
+            tagStr += "\(tag.name)_"
+        }
+        tagStr = String(tagStr.dropLast(1))
+
+        // create new filepath
+        return "\(dateStr)--\(specification)__\(tagStr).pdf"
     }
 
     /// Parse the OCR content of the pdf document try to fetch a date and some tags.
@@ -306,13 +311,13 @@ public class Document: Logging {
             // test if the document name already exists in archive, otherwise move it
             if fileManager.fileExists(atPath: newFilepath.path),
                 self.path != newFilepath {
-                os_log("File already exists!", log: self.log, type: .error)
+                os_log("File already exists!", log: Document.log, type: .error)
                 throw DocumentError.renameFailedFileAlreadyExists
             } else {
                 try fileManager.moveItem(at: self.path, to: newFilepath)
             }
         } catch let error as NSError {
-            os_log("Error while moving file: %@", log: self.log, type: .error, error.description)
+            os_log("Error while moving file: %@", log: Document.log, type: .error, error.description)
             throw DocumentError.renameFailed
         }
 
@@ -342,7 +347,7 @@ public class Document: Logging {
             #endif
 
         } catch let error as NSError {
-            os_log("Could not set file: %@", log: self.log, type: .error, error.description)
+            os_log("Could not set file: %@", log: Document.log, type: .error, error.description)
         }
     }
 
