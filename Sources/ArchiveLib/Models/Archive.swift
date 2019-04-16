@@ -171,6 +171,36 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
             }
         }
     }
+
+    public func remove(_ tag: Tag, from document: Document) {
+
+        // tag count update
+        removeTag(tag.name)
+
+        // add the new tag
+        document.tags.remove(tag)
+
+        switch document.taggingStatus {
+        case .tagged:
+            taggedDocumentManager.update(document)
+        case .untagged:
+            untaggedDocumentManager.update(document)
+        }
+    }
+
+    public func update(_ newNames: Set<String>, on document: Document) {
+
+        let currentNames = Set(document.tags.map { $0.name })
+
+        for name in newNames.subtracting(currentNames) {
+            add(tag: name, to: document)
+        }
+
+        for name in currentNames.subtracting(newNames) {
+            guard let tag = document.tags.first(where: { $0.name == name }) else { fatalError("This should not be possible!") }
+            remove(tag, from: document)
+        }
+    }
 }
 
 public enum ContentType: Equatable {

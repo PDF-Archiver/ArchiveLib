@@ -145,7 +145,7 @@ public class Document: Logging {
 
     /// Get the new foldername and filename after applying the PDF Archiver naming scheme.
     ///
-    /// ATTENTION: The specification will not be slugified in this step! Keep in mind to do this before this method call.
+    /// ATTENTION: The specification will not be slugified in this step! Keep in mind to do this before/after this method call.
     ///
     /// - Returns: Returns the new foldername and filename after renaming.
     /// - Throws: This method throws an error, if the document contains no tags or specification.
@@ -293,6 +293,11 @@ public class Document: Logging {
     ///   - slugify: Should the document name be slugified?
     /// - Throws: Renaming might fail and throws an error, e.g. because a document with this filename already exists.
     public func rename(archivePath: URL, slugify: Bool) throws {
+
+        if slugify {
+            specification = specification.slugified(withSeparator: "-")
+        }
+
         let foldername: String
         let filename: String
         (foldername, filename) = try getRenamingPath()
