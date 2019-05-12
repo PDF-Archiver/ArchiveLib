@@ -44,6 +44,7 @@ public enum TaggingStatus: String, Comparable {
 /// - renameFailed: Gerneral error while renaming document.
 /// - renameFailedFileAlreadyExists: A document with this name already exists in the archive.
 public enum DocumentError: Error {
+    case date
     case description
     case tags
     case renameFailed
@@ -55,7 +56,7 @@ public class Document: Logging {
 
     // MARK: ArchiveLib essentials
     /// Date of the document.
-    public var date: Date
+    public var date: Date?
     /// Details of the document, e.g. "blue pullover".
     public var specification: String {
         didSet {
@@ -119,7 +120,7 @@ public class Document: Logging {
         var tmpTags = parsedFilename.tagNames ?? []
 
         // set the date
-        date = parsedFilename.date ?? Date()
+        date = parsedFilename.date
 
         // get file tags https://stackoverflow.com/a/47340666
         #if os(OSX)
@@ -152,6 +153,9 @@ public class Document: Logging {
     public func getRenamingPath() throws -> (foldername: String, filename: String) {
 
         // create a filename and rename the document
+        guard let date = date else {
+            throw DocumentError.date
+        }
         guard !tags.isEmpty else {
             throw DocumentError.tags
         }
@@ -377,8 +381,10 @@ extension Document: Hashable, Comparable, CustomStringConvertible {
 
         // first: sort by date
         // second: sort by filename
-        if lhs.date != rhs.date {
-            return lhs.date < rhs.date
+        if let lhsdate = lhs.date,
+            let rhsdate = rhs.date,
+            lhsdate != rhsdate {
+            return lhsdate < rhsdate
         }
         return lhs.filename > rhs.filename
     }
