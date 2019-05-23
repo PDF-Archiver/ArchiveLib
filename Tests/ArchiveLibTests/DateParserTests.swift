@@ -4,6 +4,7 @@
 //
 //  Created by Julian Kahnert on 30.11.18.
 //
+// swiftlint:disable function_body_length
 
 import ArchiveLib
 import XCTest
@@ -28,6 +29,8 @@ class DateParserTests: XCTestCase {
         At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
         """
         let rawStringMapping = [
+            "28.01.2019": dateFormatter.date(from: "2019-01-28"),
+            "Jan 16, 2019": dateFormatter.date(from: "2019-01-16"),
             "n16072018n": dateFormatter.date(from: "2018-07-16"),
             "Berlin16072018test": dateFormatter.date(from: "2018-07-16"),
             "Berlin16072018": dateFormatter.date(from: "2018-07-16"),
