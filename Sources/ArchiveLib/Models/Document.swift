@@ -41,14 +41,47 @@ public enum TaggingStatus: String, Comparable {
 ///
 /// - description: A error in the description.
 /// - tags: A error in the document tags.
-/// - renameFailed: Gerneral error while renaming document.
 /// - renameFailedFileAlreadyExists: A document with this name already exists in the archive.
 public enum DocumentError: Error {
     case date
     case description
     case tags
-    case renameFailed
     case renameFailedFileAlreadyExists
+}
+
+extension DocumentError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .description:
+            return NSLocalizedString("document_error_description__description_missing", comment: "No description could be found, e.g. while renaming the document.")
+        case .tags:
+            return NSLocalizedString("document_error_description__tags_missing", comment: "No tags could be found, e.g. while renaming the document.")
+        case .renameFailedFileAlreadyExists:
+            return NSLocalizedString("document_error_description__rename_failed_file_already_exists", comment: "Rename failed.")
+        }
+    }
+
+    public var failureReason: String? {
+        switch self {
+        case .description:
+            return NSLocalizedString("document_failure_reason__description_missing", comment: "No description could be found, e.g. while renaming the document.")
+        case .tags:
+            return NSLocalizedString("document_failure_reason__tags_missing", comment: "No tags could be found, e.g. while renaming the document.")
+        case .renameFailedFileAlreadyExists:
+            return NSLocalizedString("document_failure_reason__rename_failed_file_already_exists", comment: "Rename failed.")
+        }
+    }
+
+    public var recoverySuggestion: String? {
+        switch self {
+        case .description:
+            return NSLocalizedString("document_recovery_suggestion__description_missing", comment: "No description could be found, e.g. while renaming the document.")
+        case .tags:
+            return NSLocalizedString("document_recovery_suggestion__tags_missing", comment: "No tags could be found, e.g. while renaming the document.")
+        case .renameFailedFileAlreadyExists:
+            return NSLocalizedString("document_recovery_suggestion__rename_failed_file_already_exists", comment: "Rename failed - file already exists.")
+        }
+    }
 }
 
 /// Main structure which contains a document.
@@ -327,7 +360,7 @@ public class Document: Logging {
             }
         } catch let error as NSError {
             os_log("Error while moving file: %@", log: Document.log, type: .error, error.description)
-            throw DocumentError.renameFailed
+            throw error
         }
 
         // update document properties
