@@ -392,6 +392,7 @@ public class Document: Logging {
             try (path as NSURL).setResourceValue(tags, forKey: URLResourceKey.tagNamesKey)
             //#else
             // TODO: add iOS implementation here
+            // SDK does not allow the access on iOS: https://developer.apple.com/documentation/foundation/urlresourcevalues/1792017-tagnames
             #endif
 
         } catch let error as NSError {
