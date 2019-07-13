@@ -27,6 +27,7 @@ public enum DateParser {
     private static let separator = "[\\.\\-\\_\\s\\/,]{0,3}"
     private static let mappings: [FormatMapping] = { return createMappings(for: locales) }()
     private static let locales = [Locale(identifier: "de_DE"), Locale(identifier: "en_US")]
+    private static let minimumDate = Date(timeIntervalSince1970: 0)
 
     // MARK: - public API
 
@@ -77,7 +78,8 @@ public enum DateParser {
                 }
 
                 // try to parse the found raw string
-                if let date = dateFormatter.date(from: foundString) {
+                if let date = dateFormatter.date(from: foundString),
+                    date > minimumDate {
                     return (date, rawDate)
                 }
             }
