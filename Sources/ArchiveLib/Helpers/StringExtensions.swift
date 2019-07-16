@@ -14,7 +14,7 @@ public extension String {
     ///
     /// - Parameter separator: Character which will be used for the seperation.
     /// - Returns: Cleaned string.
-    public func slugified(withSeparator separator: String = "-") -> String {
+    func slugified(withSeparator separator: String = "-") -> String {
         // this function is inspired by:
         // https://github.com/malt03/SwiftString/blob/0aeb47cbfa77cf8552bbadf49360ef529fbb8c03/Sources/StringExtensions.swift#L194
         let slugCharacterSet = NSCharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\(separator)")
@@ -36,7 +36,7 @@ public extension String {
     ///
     /// - Parameter pattern: regular expression which captures a group
     /// - Returns: Array of found groups
-    public func capturedGroups(withRegex pattern: String) -> [String]? {
+    func capturedGroups(withRegex pattern: String) -> [String]? {
         // this function is inspired by:
         // https://gist.github.com/unshapedesign/1b95f78d7f74241f706f346aed5384ff
         var regex: NSRegularExpression
@@ -67,7 +67,7 @@ public extension String {
     /// Return words with capitalized first letter.
     ///
     /// - Returns: Output string.
-    public func capitalizingFirstLetter() -> String {
+    func capitalizingFirstLetter() -> String {
         return prefix(1).uppercased() + dropFirst()
     }
 }

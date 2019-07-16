@@ -8,11 +8,18 @@
 import Foundation
 import os.log
 
+public protocol ArchiveDelegate: AnyObject {
+    func archive(_ archive: Archive, didAddDocument document: Document)
+    func archive(_ archive: Archive, didRemoveDocuments documents: Set<Document>)
+}
+
 public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
 
     private let taggedDocumentManager = DocumentManager()
     private let untaggedDocumentManager = DocumentManager()
     private let tagManager = TagManager()
+
+    public weak var delegate: ArchiveDelegate?
 
     public init() {}
 
@@ -85,6 +92,8 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
             // add the document to the untagged documents
             untaggedDocumentManager.add(newDocument)
         }
+
+        delegate?.archive(self, didAddDocument: newDocument)
     }
 
     public func remove(_ removableDocuments: Set<Document>) {
@@ -100,6 +109,8 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
         let taggedDocuments = removableDocuments.filter { $0.taggingStatus == .tagged }
         taggedDocumentManager.remove(taggedDocuments)
         untaggedDocumentManager.remove(removableDocuments.subtracting(taggedDocuments))
+
+        delegate?.archive(self, didRemoveDocuments: removableDocuments)
     }
 
     public func removeAll(_ status: TaggingStatus) {
@@ -148,6 +159,9 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
             // add the document to the untagged documents
             untaggedDocumentManager.update(updatedDocument)
         }
+
+        delegate?.archive(self, didAddDocument: updatedDocument)
+
         return updatedDocument
     }
 
@@ -169,6 +183,36 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
             case .untagged:
                 untaggedDocumentManager.update(document)
             }
+        }
+    }
+
+    public func remove(_ tag: Tag, from document: Document) {
+
+        // tag count update
+        removeTag(tag.name)
+
+        // add the new tag
+        document.tags.remove(tag)
+
+        switch document.taggingStatus {
+        case .tagged:
+            taggedDocumentManager.update(document)
+        case .untagged:
+            untaggedDocumentManager.update(document)
+        }
+    }
+
+    public func update(_ newNames: Set<String>, on document: Document) {
+
+        let currentNames = Set(document.tags.map { $0.name })
+
+        for name in newNames.subtracting(currentNames) {
+            add(tag: name, to: document)
+        }
+
+        for name in currentNames.subtracting(newNames) {
+            guard let tag = document.tags.first(where: { $0.name == name }) else { fatalError("This should not be possible!") }
+            remove(tag, from: document)
         }
     }
 }

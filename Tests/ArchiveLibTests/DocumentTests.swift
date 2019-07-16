@@ -272,7 +272,7 @@ class DocumentTests: XCTestCase {
         let document = Document(path: path, tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
 
         // assert
-        XCTAssertEqual(Calendar.current.compare(document.date, to: Date(), toGranularity: .day), .orderedSame)
+        XCTAssertEqual(Calendar.current.compare(document.date!, to: Date(), toGranularity: .day), .orderedSame)
     }
 
     func testDocumentDateParsingFormat1() {

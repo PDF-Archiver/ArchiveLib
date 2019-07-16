@@ -41,13 +41,53 @@ public enum TaggingStatus: String, Comparable {
 ///
 /// - description: A error in the description.
 /// - tags: A error in the document tags.
-/// - renameFailed: Gerneral error while renaming document.
 /// - renameFailedFileAlreadyExists: A document with this name already exists in the archive.
 public enum DocumentError: Error {
+    case date
     case description
     case tags
-    case renameFailed
     case renameFailedFileAlreadyExists
+}
+
+extension DocumentError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .date:
+            return NSLocalizedString("document_error_description__date_missing", comment: "No date could be found, e.g. while renaming the document.")
+        case .description:
+            return NSLocalizedString("document_error_description__description_missing", comment: "No description could be found, e.g. while renaming the document.")
+        case .tags:
+            return NSLocalizedString("document_error_description__tags_missing", comment: "No tags could be found, e.g. while renaming the document.")
+        case .renameFailedFileAlreadyExists:
+            return NSLocalizedString("document_error_description__rename_failed_file_already_exists", comment: "Rename failed.")
+        }
+    }
+
+    public var failureReason: String? {
+        switch self {
+        case .date:
+            return NSLocalizedString("document_failure_reason__date_missing", comment: "No date could be found, e.g. while renaming the document.")
+        case .description:
+            return NSLocalizedString("document_failure_reason__description_missing", comment: "No description could be found, e.g. while renaming the document.")
+        case .tags:
+            return NSLocalizedString("document_failure_reason__tags_missing", comment: "No tags could be found, e.g. while renaming the document.")
+        case .renameFailedFileAlreadyExists:
+            return NSLocalizedString("document_failure_reason__rename_failed_file_already_exists", comment: "Rename failed.")
+        }
+    }
+
+    public var recoverySuggestion: String? {
+        switch self {
+        case .date:
+            return NSLocalizedString("document_recovery_suggestion__date_missing", comment: "No date could be found, e.g. while renaming the document.")
+        case .description:
+            return NSLocalizedString("document_recovery_suggestion__description_missing", comment: "No description could be found, e.g. while renaming the document.")
+        case .tags:
+            return NSLocalizedString("document_recovery_suggestion__tags_missing", comment: "No tags could be found, e.g. while renaming the document.")
+        case .renameFailedFileAlreadyExists:
+            return NSLocalizedString("document_recovery_suggestion__rename_failed_file_already_exists", comment: "Rename failed - file already exists.")
+        }
+    }
 }
 
 /// Main structure which contains a document.
@@ -55,7 +95,7 @@ public class Document: Logging {
 
     // MARK: ArchiveLib essentials
     /// Date of the document.
-    public var date: Date
+    public var date: Date?
     /// Details of the document, e.g. "blue pullover".
     public var specification: String {
         didSet {
@@ -119,7 +159,7 @@ public class Document: Logging {
         var tmpTags = parsedFilename.tagNames ?? []
 
         // set the date
-        date = parsedFilename.date ?? Date()
+        date = parsedFilename.date
 
         // get file tags https://stackoverflow.com/a/47340666
         #if os(OSX)
@@ -145,13 +185,16 @@ public class Document: Logging {
 
     /// Get the new foldername and filename after applying the PDF Archiver naming scheme.
     ///
-    /// ATTENTION: The specification will not be slugified in this step! Keep in mind to do this before this method call.
+    /// ATTENTION: The specification will not be slugified in this step! Keep in mind to do this before/after this method call.
     ///
     /// - Returns: Returns the new foldername and filename after renaming.
     /// - Throws: This method throws an error, if the document contains no tags or specification.
     public func getRenamingPath() throws -> (foldername: String, filename: String) {
 
         // create a filename and rename the document
+        guard let date = date else {
+            throw DocumentError.date
+        }
         guard !tags.isEmpty else {
             throw DocumentError.tags
         }
@@ -159,23 +202,9 @@ public class Document: Logging {
             throw DocumentError.description
         }
 
-        // get formatted date
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        let dateStr = dateFormatter.string(from: self.date)
+        let filename = Document.createFilename(date: date, specification: specification, tags: tags)
+        let foldername = String(filename.prefix(4))
 
-        // get description
-
-        // get tags
-        var tagStr = ""
-        for tag in Array(tags).sorted(by: { $0.name < $1.name }) {
-            tagStr += "\(tag.name)_"
-        }
-        tagStr = String(tagStr.dropLast(1))
-
-        // create new filepath
-        let filename = "\(dateStr)--\(specification)__\(tagStr).pdf"
-        let foldername = String(dateStr.prefix(4))
         return (foldername, filename)
     }
 
@@ -235,6 +264,25 @@ public class Document: Logging {
         return (date, specification, tagNames)
     }
 
+    public static func createFilename(date: Date, specification: String, tags: Set<Tag>) -> String {
+        // get formatted date
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let dateStr = dateFormatter.string(from: date)
+
+        // get description
+
+        // get tags
+        var tagStr = ""
+        for tag in Array(tags).sorted(by: { $0.name < $1.name }) {
+            tagStr += "\(tag.name)_"
+        }
+        tagStr = String(tagStr.dropLast(1))
+
+        // create new filepath
+        return "\(dateStr)--\(specification)__\(tagStr).pdf"
+    }
+
     /// Parse the OCR content of the pdf document try to fetch a date and some tags.
     /// This overrides the current date and appends the new tags.
     ///
@@ -288,6 +336,11 @@ public class Document: Logging {
     ///   - slugify: Should the document name be slugified?
     /// - Throws: Renaming might fail and throws an error, e.g. because a document with this filename already exists.
     public func rename(archivePath: URL, slugify: Bool) throws {
+
+        if slugify {
+            specification = specification.slugified(withSeparator: "-")
+        }
+
         let foldername: String
         let filename: String
         (foldername, filename) = try getRenamingPath()
@@ -306,14 +359,14 @@ public class Document: Logging {
             // test if the document name already exists in archive, otherwise move it
             if fileManager.fileExists(atPath: newFilepath.path),
                 self.path != newFilepath {
-                os_log("File already exists!", log: self.log, type: .error)
+                os_log("File already exists!", log: Document.log, type: .error)
                 throw DocumentError.renameFailedFileAlreadyExists
             } else {
                 try fileManager.moveItem(at: self.path, to: newFilepath)
             }
         } catch let error as NSError {
-            os_log("Error while moving file: %@", log: self.log, type: .error, error.description)
-            throw DocumentError.renameFailed
+            os_log("Error while moving file: %@", log: Document.log, type: .error, error.description)
+            throw error
         }
 
         // update document properties
@@ -339,10 +392,11 @@ public class Document: Logging {
             try (path as NSURL).setResourceValue(tags, forKey: URLResourceKey.tagNamesKey)
             //#else
             // TODO: add iOS implementation here
+            // SDK does not allow the access on iOS: https://developer.apple.com/documentation/foundation/urlresourcevalues/1792017-tagnames
             #endif
 
         } catch let error as NSError {
-            os_log("Could not set file: %@", log: self.log, type: .error, error.description)
+            os_log("Could not set file: %@", log: Document.log, type: .error, error.description)
         }
     }
 
@@ -367,8 +421,10 @@ extension Document: Hashable, Comparable, CustomStringConvertible {
 
         // first: sort by date
         // second: sort by filename
-        if lhs.date != rhs.date {
-            return lhs.date < rhs.date
+        if let lhsdate = lhs.date,
+            let rhsdate = rhs.date,
+            lhsdate != rhsdate {
+            return lhsdate < rhsdate
         }
         return lhs.filename > rhs.filename
     }

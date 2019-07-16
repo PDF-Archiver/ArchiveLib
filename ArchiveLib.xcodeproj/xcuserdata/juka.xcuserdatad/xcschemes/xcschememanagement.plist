@@ -4,11 +4,6 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>ArchiveLib-iOS 2.xcscheme_^#shared#^_</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>8</integer>
-		</dict>
 		<key>ArchiveLib-iOS.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
@@ -37,6 +32,11 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>A352A18321A491D7001DEAC7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>ArchiveLib::ArchiveLib</key>
 		<dict>
 			<key>primary</key>

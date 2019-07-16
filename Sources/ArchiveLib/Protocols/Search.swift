@@ -70,6 +70,6 @@ public extension Searcher {
     ///   - searchElements: Objects which should be searched.
     /// - Returns: All objects which stickt to the constraints.
     private func filterBy(_ searchTerm: String, _ searchElements: Set<Element>) -> Set<Element> {
-        return searchElements.filter { $0.searchTerm.contains(searchTerm) }
+        return searchElements.filter { $0.searchTerm.lowercased().contains(searchTerm.lowercased()) }
     }
 }
