@@ -1,10 +1,10 @@
 <div align="center">
-<a href="https://geo.itunes.apple.com/us/app/pdf-archiver/id1352719750?mt=12&app=apps" target="itunes_store">
+<a href="https://apps.apple.com/app/pdf-archiver/id1352719750?mt=12&app=apps" target="itunes_store">
   <img src="assets/AppIcon.svg" width="200px">
 </a>
 <br>
 <br>
-<a href="https://geo.itunes.apple.com/us/app/pdf-archiver/id1352719750?mt=12&app=apps">
+<a href="https://apps.apple.com/app/pdf-archiver/id1352719750?mt=12&app=apps">
 <img src="https://linkmaker.itunes.apple.com/en-us/badge-lrg.svg?releaseDate=2018-02-28T00:00:00Z&kind=desktopapp&bubble=macos_apps" width="165px">
 </a>
 <br>
@@ -21,8 +21,8 @@
 # ArchiveLib
 
 ArchiveLib is the backbone for the following apps:
-* **macOS:** [PDF Archiver](https://geo.itunes.apple.com/us/app/pdf-archiver/id1352719750?mt=12&app=apps)
-* **iOS:** [PDF Archive Viewer](https://itunes.apple.com/app/apple-store/id1433801905?pt=118993774&ct=GitHub&mt=8)
+* **macOS:** [PDF Archiver](https://apps.apple.com/app/pdf-archiver/id1352719750?mt=12&app=apps)
+* **iOS:** [PDF Archive Viewer](https://apps.apple.com/app/apple-store/id1433801905?pt=118993774&ct=GitHub&mt=8)
 
 
 ## :scroll: Convention
@@ -58,7 +58,7 @@ This structure is independent from your OS and filesystem and makes it very easy
 
 
 ## :octocat: How to contribute
-Rate the App in the [App Store](https://itunes.apple.com/app/apple-store/id1433801905?pt=118993774&ct=GitHub&mt=8&action=write-review).
+Rate the App in the [App Store](https://apps.apple.com/app/apple-store/id1433801905?pt=118993774&ct=GitHub&mt=8&action=write-review).
 
 All contributions are welcome!
 Feel free to contribute to this project.
