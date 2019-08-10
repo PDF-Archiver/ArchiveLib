@@ -17,6 +17,8 @@
 		A306674121A4A91F00378032 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_19 /* Search.swift */; };
 		A3199FD821C051B600D07553 /* DocumentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3199FD721C051B600D07553 /* DocumentManager.swift */; };
 		A3199FD921C051BB00D07553 /* DocumentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3199FD721C051B600D07553 /* DocumentManager.swift */; };
+		A332A9C422FF758E00D14F94 /* ContentParseOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A332A9C322FF758E00D14F94 /* ContentParseOperation.swift */; };
+		A332A9C522FF785700D14F94 /* ContentParseOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A332A9C322FF758E00D14F94 /* ContentParseOperation.swift */; };
 		A352A11A21A481AF001DEAC7 /* DateParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A352A11921A481AF001DEAC7 /* DateParser.swift */; };
 		A352A17221A48DDD001DEAC7 /* ArchiveLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "ArchiveLib::ArchiveLib::Product" /* ArchiveLib.framework */; };
 		A352A19B21A49275001DEAC7 /* ArchiveLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A352A18421A491D7001DEAC7 /* ArchiveLib.framework */; };
@@ -78,6 +80,7 @@
 
 /* Begin PBXFileReference section */
 		A3199FD721C051B600D07553 /* DocumentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentManager.swift; sourceTree = "<group>"; };
+		A332A9C322FF758E00D14F94 /* ContentParseOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentParseOperation.swift; sourceTree = "<group>"; };
 		A352A11921A481AF001DEAC7 /* DateParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateParser.swift; sourceTree = "<group>"; };
 		A352A15E21A48DC0001DEAC7 /* ArchiveLib-iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ArchiveLib-iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A352A16221A48DC0001DEAC7 /* ArchiveLibTests.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ArchiveLibTests.plist; sourceTree = "<group>"; };
@@ -187,6 +190,7 @@
 				OBJ_17 /* StringExtensions.swift */,
 				A393ADE121C858A200A96AD2 /* SortDescriptors.swift */,
 				A3B6B11921D67B3B00F7323B /* TagParser.swift */,
+				A332A9C322FF758E00D14F94 /* ContentParseOperation.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -506,6 +510,7 @@
 				A306673C21A4A90E00378032 /* Document.swift in Sources */,
 				A3199FD821C051B600D07553 /* DocumentManager.swift in Sources */,
 				A3B6B11A21D67B3B00F7323B /* TagParser.swift in Sources */,
+				A332A9C422FF758E00D14F94 /* ContentParseOperation.swift in Sources */,
 				A394387421BD4CCF0024E2F6 /* Archive.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -525,6 +530,7 @@
 				OBJ_38 /* Search.swift in Sources */,
 				A3199FD921C051BB00D07553 /* DocumentManager.swift in Sources */,
 				A3B6B11B21D67B3B00F7323B /* TagParser.swift in Sources */,
+				A332A9C522FF785700D14F94 /* ContentParseOperation.swift in Sources */,
 				A394387521BD4CCF0024E2F6 /* Archive.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

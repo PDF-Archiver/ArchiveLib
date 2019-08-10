@@ -19,6 +19,15 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
     private let untaggedDocumentManager = DocumentManager()
     private let tagManager = TagManager()
 
+    private let queue: OperationQueue = {
+        let workerQueue = OperationQueue()
+
+        // a higher QoS seems to result spinner showing at app launch
+        workerQueue.qualityOfService = .utility
+        workerQueue.name = (Bundle.main.bundleIdentifier ?? "PDFArchiver") + ".parseContent"
+        return workerQueue
+    }()
+
     public weak var delegate: ArchiveDelegate?
 
     public init() {}
@@ -83,8 +92,9 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
                 if parsingOptions.contains(.mainThread) {
                     newDocument.parseContent(parsingOptions)
                 } else {
-                    DispatchQueue.global(qos: .userInitiated).async {
-                        newDocument.parseContent(parsingOptions)
+                    if !isAlreadyParsing(document: newDocument) {
+                        // parse the document content, which might updates the date and tags
+                        queue.addOperation(ContentParseOperation(with: newDocument, options: parsingOptions))
                     }
                 }
             }
@@ -149,11 +159,9 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
             taggedDocumentManager.update(updatedDocument)
         case .untagged:
 
-            if !parsingOptions.isEmpty {
+            if !parsingOptions.isEmpty && !isAlreadyParsing(document: updatedDocument) {
                 // parse the document content, which might updates the date and tags
-                DispatchQueue.global(qos: .userInitiated).async {
-                    updatedDocument.parseContent(parsingOptions)
-                }
+                queue.addOperation(ContentParseOperation(with: updatedDocument, options: parsingOptions))
             }
 
             // add the document to the untagged documents
@@ -214,6 +222,19 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
             guard let tag = document.tags.first(where: { $0.name == name }) else { fatalError("This should not be possible!") }
             remove(tag, from: document)
         }
+    }
+
+    // MARK: - Content parsing queue actions
+
+    public func cancelOperations(on document: Document) {
+        (queue.operations as? [ContentParseOperation] ?? [])
+            .filter { $0.document == document }
+            .forEach { $0.cancel() }
+    }
+
+    private func isAlreadyParsing(document: Document) -> Bool {
+        guard let operations = queue.operations as? [ContentParseOperation] else { fatalError("Could not get operations.") }
+        return operations.contains { $0.document == document }
     }
 }
 
