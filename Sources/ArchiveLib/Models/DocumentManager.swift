@@ -10,6 +10,8 @@ import Foundation
 public protocol DocumentManagerHandling: AnyObject {
     var years: Set<String> { get }
 
+    func getAvailableTags(with searchterms: [String]) -> Set<String>
+
     func get(scope: SearchScope, searchterms: [String], status: TaggingStatus) -> Set<Document>
     func add(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus, parse: ParsingOptions)
     func remove(_ removableDocuments: Set<Document>)
@@ -52,7 +54,7 @@ extension DocumentManager: Searcher {
     typealias Element = Document
 
     var allSearchElements: Set<Document> {
-        return documents.value
+        return Set(documents.value)
     }
 }
 

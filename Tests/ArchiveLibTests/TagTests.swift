@@ -87,7 +87,7 @@ class TagTests: XCTestCase {
         tagSearcher.allSearchElements.insert(tag2)
         tagSearcher.allSearchElements.insert(tag3)
 
-        let filteredTags = tagSearcher.filterBy("tag1")
+        let filteredTags = tagSearcher.filter(by: "tag1")
 
         // assert
         XCTAssertEqual(filteredTags.count, 1)

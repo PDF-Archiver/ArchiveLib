@@ -104,7 +104,7 @@ public class Document: Logging {
     }
 
     /// Tags/categories of the document.
-    public var tags = Set<Tag>()
+    public var tags = Set<String>()
 
     // MARK: data from filename
     /// Name of the folder, e.g. "2018".
@@ -131,7 +131,7 @@ public class Document: Logging {
     }
 
     // MARK: private properties
-    private let tagManager: TagManager
+    public let identifier = UUID()
 
     /// Create a new document, which contains the main information (date, specification, tags) of the ArchiveLib.
     /// New documents should only be created by the DocumentManager in this package.
@@ -141,14 +141,13 @@ public class Document: Logging {
     ///   - availableTags: Currently available tags in archive.
     ///   - byteSize: Size of this documen in number of bytes.
     ///   - documentDownloadStatus: Download status of the document.
-    init(path documentPath: URL, tagManager documentTagManager: TagManager, size byteSize: Int64?, downloadStatus documentDownloadStatus: DownloadStatus, taggingStatus documentTaggingStatus: TaggingStatus) {
+    init(path documentPath: URL, size byteSize: Int64?, downloadStatus documentDownloadStatus: DownloadStatus, taggingStatus documentTaggingStatus: TaggingStatus) {
 
         path = documentPath
         filename = documentPath.lastPathComponent
         folder = documentPath.deletingLastPathComponent().lastPathComponent
         downloadStatus = documentDownloadStatus
         taggingStatus = documentTaggingStatus
-        tagManager = documentTagManager
 
         if let byteSize = byteSize {
             size = ByteCountFormatter.string(fromByteCount: byteSize, countStyle: .file)
@@ -156,7 +155,7 @@ public class Document: Logging {
 
         // parse the current filename
         let parsedFilename = Document.parseFilename(documentPath)
-        var tmpTags = parsedFilename.tagNames ?? []
+        tags = Set(parsedFilename.tagNames ?? [])
 
         // set the date
         date = parsedFilename.date
@@ -173,11 +172,6 @@ public class Document: Logging {
         //#else
         // TODO: add iOS implementation here
         #endif
-
-        // get the available tags of the archive
-        for documentTagName in Set(tmpTags) {
-            tags.insert(tagManager.add(documentTagName))
-        }
 
         // set the specification
         specification = parsedFilename.specification ?? ""
@@ -264,7 +258,7 @@ public class Document: Logging {
         return (date, specification, tagNames)
     }
 
-    public static func createFilename(date: Date, specification: String, tags: Set<Tag>) -> String {
+    public static func createFilename(date: Date, specification: String, tags: Set<String>) -> String {
         // get formatted date
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -274,8 +268,8 @@ public class Document: Logging {
 
         // get tags
         var tagStr = ""
-        for tag in Array(tags).sorted(by: { $0.name < $1.name }) {
-            tagStr += "\(tag.name)_"
+        for tag in tags.sorted() {
+            tagStr += "\(tag)_"
         }
         tagStr = String(tagStr.dropLast(1))
 
@@ -318,14 +312,7 @@ public class Document: Logging {
 
             // get new tags
             let newTags = TagParser.parse(text)
-
-            // get the already available tags
-            let availableTags = Set(tagManager.allSearchElements.map { $0.name })
-
-            // add all found tags which are already in the archive
-            for newTag in newTags.intersection(availableTags) {
-                tags.insert(tagManager.add(newTag))
-            }
+            tags.formUnion(newTags)
         }
     }
 
@@ -383,9 +370,7 @@ public class Document: Logging {
 
         do {
             // get document tags
-            let tags = self.tags
-                .map { $0.name }
-                .sorted()
+            let tags = self.tags.sorted()
 
             // set file tags [https://stackoverflow.com/a/47340666]
             #if os(OSX)
@@ -431,14 +416,15 @@ extension Document: Hashable, Comparable, CustomStringConvertible {
 
     public static func == (lhs: Document, rhs: Document) -> Bool {
         // "==" and hashValue must only compare the path to avoid duplicates in sets
-        return lhs.path == rhs.path
+        return lhs.identifier == rhs.identifier
     }
 
     // "==" and hashValue must only compare the path to avoid duplicates in sets
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(searchTerm)
+        hasher.combine(identifier)
     }
 
+    // TODO: remove this
     public var description: String { return filename }
 }
 

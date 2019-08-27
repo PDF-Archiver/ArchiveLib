@@ -10,7 +10,6 @@
 		A306673721A49F6500378032 /* SearchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_23 /* SearchTests.swift */; };
 		A306673821A49F6500378032 /* SearchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_23 /* SearchTests.swift */; };
 		A306673C21A4A90E00378032 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* Document.swift */; };
-		A306673D21A4A91000378032 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* Tag.swift */; };
 		A306673E21A4A91500378032 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* Logging.swift */; };
 		A306673F21A4A91800378032 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* StringExtensions.swift */; };
 		A306674021A4A91B00378032 /* DateParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A352A11921A481AF001DEAC7 /* DateParser.swift */; };
@@ -48,14 +47,11 @@
 		A3D631A121B14A9B009FE9C3 /* DateParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D6319F21B14A9B009FE9C3 /* DateParserTests.swift */; };
 		A3D631A621B1C34E009FE9C3 /* StringExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D631A521B1C34E009FE9C3 /* StringExtensionTests.swift */; };
 		A3D631A721B1C34E009FE9C3 /* StringExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D631A521B1C34E009FE9C3 /* StringExtensionTests.swift */; };
-		A3F3DAD221B3EE990004EFF6 /* TagManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3DAD121B3EE990004EFF6 /* TagManager.swift */; };
-		A3F3DAD321B3EE990004EFF6 /* TagManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F3DAD121B3EE990004EFF6 /* TagManager.swift */; };
 		A3F5D63721E0C0D200825CE0 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F5D63621E0C0D200825CE0 /* Atomic.swift */; };
 		A3F5D63821E0C0D200825CE0 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F5D63621E0C0D200825CE0 /* Atomic.swift */; };
 		A3F5D63A21E0CCC400825CE0 /* AtomicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F5D63921E0CCC400825CE0 /* AtomicTests.swift */; };
 		A3F5D63B21E0CCC400825CE0 /* AtomicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F5D63921E0CCC400825CE0 /* AtomicTests.swift */; };
 		OBJ_34 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* Document.swift */; };
-		OBJ_35 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* Tag.swift */; };
 		OBJ_36 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* Logging.swift */; };
 		OBJ_37 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* StringExtensions.swift */; };
 		OBJ_38 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_19 /* Search.swift */; };
@@ -100,12 +96,10 @@
 		A3D6319B21B13FDD009FE9C3 /* DocumentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentTests.swift; sourceTree = "<group>"; };
 		A3D6319F21B14A9B009FE9C3 /* DateParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateParserTests.swift; sourceTree = "<group>"; };
 		A3D631A521B1C34E009FE9C3 /* StringExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionTests.swift; sourceTree = "<group>"; };
-		A3F3DAD121B3EE990004EFF6 /* TagManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagManager.swift; sourceTree = "<group>"; };
 		A3F5D63621E0C0D200825CE0 /* Atomic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
 		A3F5D63921E0CCC400825CE0 /* AtomicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicTests.swift; sourceTree = "<group>"; };
 		"ArchiveLib::ArchiveLib::Product" /* ArchiveLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ArchiveLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_13 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
-		OBJ_14 /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		OBJ_16 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		OBJ_17 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
 		OBJ_19 /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
@@ -174,8 +168,6 @@
 			children = (
 				A394387321BD4CCF0024E2F6 /* Archive.swift */,
 				OBJ_13 /* Document.swift */,
-				OBJ_14 /* Tag.swift */,
-				A3F3DAD121B3EE990004EFF6 /* TagManager.swift */,
 				A3199FD721C051B600D07553 /* DocumentManager.swift */,
 			);
 			path = Models;
@@ -501,8 +493,6 @@
 			files = (
 				A306673F21A4A91800378032 /* StringExtensions.swift in Sources */,
 				A393ADE221C858A200A96AD2 /* SortDescriptors.swift in Sources */,
-				A306673D21A4A91000378032 /* Tag.swift in Sources */,
-				A3F3DAD221B3EE990004EFF6 /* TagManager.swift in Sources */,
 				A3F5D63721E0C0D200825CE0 /* Atomic.swift in Sources */,
 				A306673E21A4A91500378032 /* Logging.swift in Sources */,
 				A306674121A4A91F00378032 /* Search.swift in Sources */,
@@ -522,9 +512,7 @@
 				A352A11A21A481AF001DEAC7 /* DateParser.swift in Sources */,
 				A393ADE321C858A200A96AD2 /* SortDescriptors.swift in Sources */,
 				OBJ_34 /* Document.swift in Sources */,
-				A3F3DAD321B3EE990004EFF6 /* TagManager.swift in Sources */,
 				A3F5D63821E0C0D200825CE0 /* Atomic.swift in Sources */,
-				OBJ_35 /* Tag.swift in Sources */,
 				OBJ_36 /* Logging.swift in Sources */,
 				OBJ_37 /* StringExtensions.swift in Sources */,
 				OBJ_38 /* Search.swift in Sources */,
