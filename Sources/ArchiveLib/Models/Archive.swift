@@ -79,9 +79,7 @@ public class Archive: DocumentManagerHandling, Logging {
     }
 
     public func add(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus, parse parsingOptions: ParsingOptions = []) {
-        print(path)
 
-        var foundDocument: Document?
         switch status {
         case .untagged:
             if let foundDocument = untaggedDocumentManager.filter(by: path.lastPathComponent).first {
@@ -95,7 +93,7 @@ public class Archive: DocumentManagerHandling, Logging {
             }
         }
 
-        let newDocument = Document(path: path, size: size, downloadStatus: downloadStatus, taggingStatus: status)
+        let newDocument = Document(id: UUID(), path: path, size: size, downloadStatus: downloadStatus, taggingStatus: status)
         switch status {
         case .tagged:
             taggedDocumentManager.add(newDocument)
@@ -160,7 +158,15 @@ public class Archive: DocumentManagerHandling, Logging {
     }
 
     public func update(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus, parse parsingOptions: ParsingOptions = []) -> Document {
-        let updatedDocument = Document(path: path, size: size, downloadStatus: downloadStatus, taggingStatus: status)
+
+        let documentId: UUID
+        if let foundDocument = get(scope: .all, searchterms: [path.lastPathComponent], status: status).first {
+            documentId = foundDocument.id
+        } else {
+            documentId = UUID()
+        }
+
+        let updatedDocument = Document(id: documentId, path: path, size: size, downloadStatus: downloadStatus, taggingStatus: status)
         update(updatedDocument)
         return updatedDocument
     }

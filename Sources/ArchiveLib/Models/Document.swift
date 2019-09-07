@@ -91,9 +91,13 @@ extension DocumentError: LocalizedError {
 }
 
 /// Main structure which contains a document.
-public class Document: Logging {
+public class Document: Logging, Identifiable {
 
     // MARK: ArchiveLib essentials
+
+    /// ID of a document
+    public let id: UUID
+
     /// Date of the document.
     public var date: Date?
     /// Details of the document, e.g. "blue pullover".
@@ -130,9 +134,6 @@ public class Document: Logging {
             .joined(separator: " ")
     }
 
-    // MARK: private properties
-    public let identifier = UUID()
-
     /// Create a new document, which contains the main information (date, specification, tags) of the ArchiveLib.
     /// New documents should only be created by the DocumentManager in this package.
     ///
@@ -141,8 +142,9 @@ public class Document: Logging {
     ///   - availableTags: Currently available tags in archive.
     ///   - byteSize: Size of this documen in number of bytes.
     ///   - documentDownloadStatus: Download status of the document.
-    init(path documentPath: URL, size byteSize: Int64?, downloadStatus documentDownloadStatus: DownloadStatus, taggingStatus documentTaggingStatus: TaggingStatus) {
+    init(id documentId: UUID, path documentPath: URL, size byteSize: Int64?, downloadStatus documentDownloadStatus: DownloadStatus, taggingStatus documentTaggingStatus: TaggingStatus) {
 
+        id = documentId
         path = documentPath
         filename = documentPath.lastPathComponent
         folder = documentPath.deletingLastPathComponent().lastPathComponent
@@ -416,12 +418,12 @@ extension Document: Hashable, Comparable, CustomStringConvertible {
 
     public static func == (lhs: Document, rhs: Document) -> Bool {
         // "==" and hashValue must only compare the path to avoid duplicates in sets
-        return lhs.identifier == rhs.identifier
+        return lhs.id == rhs.id
     }
 
     // "==" and hashValue must only compare the path to avoid duplicates in sets
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(identifier)
+        hasher.combine(id)
     }
 
     // TODO: remove this
