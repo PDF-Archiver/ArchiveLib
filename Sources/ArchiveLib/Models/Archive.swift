@@ -37,8 +37,14 @@ public class Archive: DocumentManagerHandling, Logging {
         // search in filename of the documents
         let documents = taggedDocumentManager.filter(by: searchterms).union(untaggedDocumentManager.filter(by: searchterms))
 
-        let tags = documents.reduce(into: Set<String>()) { result, document in
+        // get a set of all document tags
+        let allDocumentTags = documents.reduce(into: Set<String>()) { result, document in
             result.formUnion(document.tags)
+        }
+
+        // filter the tags that match any searchterm
+        let tags = allDocumentTags.filter { tag in
+            searchterms.contains { tag.contains($0) }
         }
 
         return tags
