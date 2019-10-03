@@ -9,13 +9,13 @@ import Foundation
 import os.log
 
 /// Logging protocel
-public protocol Logging {
+public protocol SystemLogging {
 
     /// Property that should be used for generating logs.
     static var log: OSLog { get }
 }
 
-extension Logging {
+extension SystemLogging {
 
     /// Getting an OSLog instance for logging.
     public static var log: OSLog {

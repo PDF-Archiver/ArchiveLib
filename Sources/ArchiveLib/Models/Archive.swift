@@ -13,7 +13,7 @@ public protocol ArchiveDelegate: AnyObject {
     func archive(_ archive: Archive, didRemoveDocuments documents: Set<Document>)
 }
 
-public class Archive: DocumentManagerHandling, Logging {
+public class Archive: DocumentManagerHandling, SystemLogging {
 
     private let taggedDocumentManager = DocumentManager()
     private let untaggedDocumentManager = DocumentManager()

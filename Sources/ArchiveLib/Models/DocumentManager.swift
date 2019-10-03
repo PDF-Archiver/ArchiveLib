@@ -21,7 +21,7 @@ public protocol DocumentManagerHandling: AnyObject {
     func archive(_ document: Document)
 }
 
-class DocumentManager: Logging {
+class DocumentManager: SystemLogging {
 
     var documents = Atomic(Set<Document>())
 

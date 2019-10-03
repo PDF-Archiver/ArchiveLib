@@ -8,7 +8,7 @@
 import ArchiveLib
 import XCTest
 
-class TestLogging: Logging {
+class TestLogging: SystemLogging {
 }
 
 class LoggingTests: XCTestCase {
