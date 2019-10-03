@@ -169,7 +169,7 @@ public class Document: Logging, Identifiable {
 
         if let resource = resource,
             let fileTags = resource as? [String] {
-            tmpTags.append(contentsOf: fileTags)
+            tags.formUnion(fileTags)
         }
         //#else
         // TODO: add iOS implementation here

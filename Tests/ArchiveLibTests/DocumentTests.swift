@@ -11,9 +11,8 @@ import XCTest
 
 class DocumentTests: XCTestCase {
 
-    var tag1 = Tag(name: "tag1", count: 1)
-    var tag2 = Tag(name: "tag2", count: 2)
-    var tagManager = TagManager()
+    let tag1 = "tag1"
+    let tag2 = "tag2"
 
     let defaultDownloadStatus = DownloadStatus.local
     let defaaultSize = Int64(1024)
@@ -26,12 +25,6 @@ class DocumentTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-
-        // reset the tags
-        tagManager = TagManager()
-        _ = tagManager.add("tag1", count: 1)
-        _ = tagManager.add("tag2", count: 2)
-        _ = tagManager.add("tag3", count: 3)
     }
 
     // MARK: - Test Document.parseFilename
@@ -84,7 +77,7 @@ class DocumentTests: XCTestCase {
 
         // setup
         let path = URL(fileURLWithPath: "~/Downloads/scan1.pdf")
-        let document = Document(path: path, tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .untagged)
+        let document = Document(id: UUID(), path: path, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .untagged)
 
         document.date = dateFormatter.date(from: "2010-05-12") ?? Date()
         document.specification = "example-description"
@@ -104,7 +97,7 @@ class DocumentTests: XCTestCase {
         // setup
         let path = URL(fileURLWithPath: "~/Downloads/Testscan 1.pdf")
 
-        let document = Document(path: path, tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .untagged)
+        let document = Document(id: UUID(), path: path, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .untagged)
         document.specification = "this-is-a-test"
         document.tags = Set([tag1])
         document.date = dateFormatter.date(from: "2010-05-12") ?? Date()
@@ -121,7 +114,7 @@ class DocumentTests: XCTestCase {
 
         // setup
         let path = URL(fileURLWithPath: "~/Downloads/2010-05-12--example-description__tag1_tag2.pdf")
-        let document = Document(path: path, tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .untagged)
+        let document = Document(id: UUID(), path: path, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .untagged)
 
         // calculate
         let renameOutput = try? document.getRenamingPath()
@@ -138,7 +131,7 @@ class DocumentTests: XCTestCase {
         let path = URL(fileURLWithPath: "~/Downloads/scan1.pdf")
 
         // calculate
-        let document = Document(path: path, tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .untagged)
+        let document = Document(id: UUID(), path: path, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .untagged)
 
         // assert
         XCTAssertEqual(document.tags.count, 0)
@@ -152,7 +145,7 @@ class DocumentTests: XCTestCase {
         let path = URL(fileURLWithPath: "~/Downloads/scan1__tag1_tag2.pdf")
 
         // calculate
-        let document = Document(path: path, tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .untagged)
+        let document = Document(id: UUID(), path: path, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .untagged)
         document.specification = ""
 
         // assert
@@ -166,9 +159,9 @@ class DocumentTests: XCTestCase {
     func testHashable() {
 
         // setup
-        let document1 = Document(path: URL(fileURLWithPath: "~/Downloads/2018-05-12--aaa-example-description__tag1_tag2.pdf"), tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
-        let document2 = Document(path: URL(fileURLWithPath: "~/Downloads/2018-05-12--bbb-example-description__tag1_tag2.pdf"), tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
-        let document3 = Document(path: URL(fileURLWithPath: "~/Downloads/2010-05-12--aaa-example-description__tag1_tag2.pdf"), tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .untagged)
+        let document1 = Document(id: UUID(), path: URL(fileURLWithPath: "~/Downloads/2018-05-id: UUID(), 12--aaa-example-description__tag1_tag2.pdf"), size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+        let document2 = Document(id: UUID(), path: URL(fileURLWithPath: "~/Downloads/2018-05-id: UUID(), 12--bbb-example-description__tag1_tag2.pdf"), size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+        let document3 = Document(id: UUID(), path: URL(fileURLWithPath: "~/Downloads/2010-05-id: UUID(), 12--aaa-example-description__tag1_tag2.pdf"), size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .untagged)
         let invalidSortDescriptor = NSSortDescriptor(key: "test", ascending: true)
         let filenameSortDescriptor1 = NSSortDescriptor(key: "filename", ascending: true)
         let filenameSortDescriptor2 = NSSortDescriptor(key: "filename", ascending: false)
@@ -211,8 +204,22 @@ class DocumentTests: XCTestCase {
     func testComparable() {
 
         // setup
-        let document1 = Document(path: URL(fileURLWithPath: "~/Downloads/2018-05-12--example-description__tag1_tag2.pdf"), tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
-        let document2 = Document(path: URL(fileURLWithPath: "~/Downloads/2018-05-12--example-description__tag1_tag2.pdf"), tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+        let document1 = Document(id: UUID(), path: URL(fileURLWithPath: "~/Downloads/2018-05-12--example-description__tag1_tag2.pdf"), size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+        let document2 = Document(id: UUID(), path: URL(fileURLWithPath: "~/Downloads/2018-05-12--example-description__tag1_tag2.pdf"), size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+
+        document2.specification = "this is a test"
+
+        // assert
+        XCTAssertNotEqual(document1, document2)
+        XCTAssertNotEqual(document1.hashValue, document2.hashValue)
+    }
+
+    func testComparableWithSameUUID() {
+
+        // setup
+        let uuid = UUID()
+        let document1 = Document(id: uuid, path: URL(fileURLWithPath: "~/Downloads/2018-05-12--example-description__tag1_tag2.pdf"), size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+        let document2 = Document(id: uuid, path: URL(fileURLWithPath: "~/Downloads/2018-05-12--example-description__tag1_tag2.pdf"), size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
 
         document2.specification = "this is a test"
 
@@ -225,7 +232,7 @@ class DocumentTests: XCTestCase {
 
         // setup
         let path = URL(fileURLWithPath: "~/Downloads/2018-05-12--example-description__tag1_tag2.pdf")
-        let document = Document(path: path, tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+        let document = Document(id: UUID(), path: path, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
 
         // assert
         XCTAssertEqual(document.description, path.lastPathComponent)
@@ -235,7 +242,7 @@ class DocumentTests: XCTestCase {
 
         // setup
         let path = URL(fileURLWithPath: "~/Downloads/2018-05-12--example-description__tag1_tag2.pdf")
-        let document = Document(path: path, tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+        let document = Document(id: UUID(), path: path, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
 
         // assert
         XCTAssertEqual(document.searchTerm, path.lastPathComponent)
@@ -249,7 +256,7 @@ class DocumentTests: XCTestCase {
         let path = URL(fileURLWithPath: "~/Downloads/2010-05-12--example-description__tag1_tag2_tag4.pdf")
 
         // create a basic document
-        let document = Document(path: path, tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+        let document = Document(id: UUID(), path: path, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
 
         // assert
         XCTAssertEqual(document.specification, "example-description")
@@ -257,9 +264,6 @@ class DocumentTests: XCTestCase {
         XCTAssertEqual(document.tags.count, 3)
         XCTAssertTrue(document.tags.contains(tag1))
         XCTAssertTrue(document.tags.contains(tag2))
-        XCTAssertTrue(tagManager.getAvailableTags(with: []).contains { $0.name == "tag1" && $0.count == 2 }, "The count of 'tag1' should be incremented, but actually wasn't.")
-        XCTAssertTrue(tagManager.getAvailableTags(with: []).contains { $0.name == "tag2" && $0.count == 3 }, "The count of 'tag2' should be incremented, but actually wasn't.")
-        XCTAssertTrue(tagManager.getAvailableTags(with: []).contains { $0.name == "tag4" && $0.count == 1 }, "The count of 'tag4' should be incremented, but actually wasn't.")
         XCTAssertEqual(document.date, dateFormatter.date(from: "2010-05-12"))
     }
 
@@ -269,10 +273,10 @@ class DocumentTests: XCTestCase {
         let path = URL(fileURLWithPath: "~/Downloads/scan1.pdf")
 
         // calculate
-        let document = Document(path: path, tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+        let document = Document(id: UUID(), path: path, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
 
         // assert
-        XCTAssertEqual(Calendar.current.compare(document.date!, to: Date(), toGranularity: .day), .orderedSame)
+        XCTAssertNil(document.date)
     }
 
     func testDocumentDateParsingFormat1() {
@@ -281,7 +285,7 @@ class DocumentTests: XCTestCase {
         let path = URL(fileURLWithPath: "~/Downloads/2010-05-12 example filename.pdf")
 
         // calculate
-        let document = Document(path: path, tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+        let document = Document(id: UUID(), path: path, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
 
         // assert
         XCTAssertEqual(document.date, dateFormatter.date(from: "2010-05-12"))
@@ -296,7 +300,7 @@ class DocumentTests: XCTestCase {
         let path = URL(fileURLWithPath: "~/Downloads/2010_05_12 example filename.pdf")
 
         // calculate
-        let document = Document(path: path, tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+        let document = Document(id: UUID(), path: path, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
 
         // assert
         XCTAssertEqual(document.date, dateFormatter.date(from: "2010-05-12"))
@@ -311,7 +315,7 @@ class DocumentTests: XCTestCase {
         let path = URL(fileURLWithPath: "~/Downloads/20100512 example filename.pdf")
 
         // calculate
-        let document = Document(path: path, tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+        let document = Document(id: UUID(), path: path, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
 
         // assert
         XCTAssertEqual(document.date, dateFormatter.date(from: "2010-05-12"))
@@ -326,13 +330,13 @@ class DocumentTests: XCTestCase {
         let path = URL(fileURLWithPath: "~/Downloads/2010_05_12__15_17.pdf")
 
         // calculate
-        let document = Document(path: path, tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+        let document = Document(id: UUID(), path: path, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
 
         // assert
         XCTAssertEqual(document.date, dateFormatter.date(from: "2010-05-12"))
         XCTAssertEqual(document.specification, "")
-        XCTAssertTrue(document.tags.contains { $0.name == "15" })
-        XCTAssertTrue(document.tags.contains { $0.name == "17" })
+        XCTAssertTrue(document.tags.contains("15"))
+        XCTAssertTrue(document.tags.contains("17"))
     }
 
     func testDocumentDateParsingScanSnapFormat() {
@@ -341,7 +345,7 @@ class DocumentTests: XCTestCase {
         let path = URL(fileURLWithPath: "~/Downloads/2010_05_12_15_17.pdf")
 
         // calculate
-        let document = Document(path: path, tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+        let document = Document(id: UUID(), path: path, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
 
         // assert
         XCTAssertEqual(document.date, dateFormatter.date(from: "2010-05-12"))
@@ -354,7 +358,7 @@ class DocumentTests: XCTestCase {
 
         // setup
         let path = URL(fileURLWithPath: "~/Downloads/scan1.pdf")
-        let document = Document(path: path, tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+        let document = Document(id: UUID(), path: path, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
         document.date = dateFormatter.date(from: "2010-05-12") ?? Date()
         document.specification = "testing-test-description"
         document.tags = Set([tag1, tag2])
@@ -372,7 +376,7 @@ class DocumentTests: XCTestCase {
 
         // setup
         let path = URL(fileURLWithPath: "~/Downloads/2010/2010-05-12--testing-test-description__tag1_tag2.pdf")
-        let document = Document(path: path, tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+        let document = Document(id: UUID(), path: path, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
 
         // calculate & assert
         XCTAssertThrowsError(try document.rename(archivePath: URL(string: "~/Downloads/")!, slugify: true))
@@ -384,7 +388,7 @@ class DocumentTests: XCTestCase {
         let home = FileManager.default.temporaryDirectory
         let path = home.appendingPathComponent("2010-05-12--testing-test-description__tag1_tag2.pdf")
         try? "THIS IS A TEST, YOU CAN DELETE THIS FILE".write(to: path, atomically: true, encoding: .utf8)
-        let document1 = Document(path: path, tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+        let document1 = Document(id: UUID(), path: path, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
 
         // cleanup the document, if it already exists
         let newDocumentPathComponents = try! document1.getRenamingPath()
@@ -403,7 +407,7 @@ class DocumentTests: XCTestCase {
 
         // create a new document with the same name and try to rename it (again) - this should fail
         try? "THIS IS A TEST, YOU CAN DELETE THIS FILE".write(to: path, atomically: true, encoding: .utf8)
-        let document2 = Document(path: path, tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+        let document2 = Document(id: UUID(), path: path, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
         XCTAssertThrowsError(try document2.rename(archivePath: home, slugify: true))
     }
 }

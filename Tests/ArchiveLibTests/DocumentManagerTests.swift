@@ -13,12 +13,11 @@ class DocumentManagerTests: XCTestCase {
 
     let defaultDownloadStatus = DownloadStatus.local
     let defaaultSize = Int64(1024)
-    let tagManager = TagManager()
     var documentManager = DocumentManager()
 
-    lazy var document1 = Document(path: URL(fileURLWithPath: "~/Downloads/2018-05-12--aaa-example-description__tag1_tag2.pdf"), tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
-    lazy var document2 = Document(path: URL(fileURLWithPath: "~/Downloads/2018-05-12--bbb-example-description__tag1_tag2.pdf"), tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
-    lazy var document3 = Document(path: URL(fileURLWithPath: "~/Downloads/2018-05-12--ccc-example-description__tag1_tag2.pdf"), tagManager: tagManager, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+    lazy var document1 = Document(id: UUID(), path: URL(fileURLWithPath: "~/Downloads/2018-05-12--aaa-example-description__tag1_tag2.pdf"), size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+    lazy var document2 = Document(id: UUID(), path: URL(fileURLWithPath: "~/Downloads/2018-05-12--bbb-example-description__tag1_tag2.pdf"), size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
+    lazy var document3 = Document(id: UUID(), path: URL(fileURLWithPath: "~/Downloads/2018-05-12--ccc-example-description__tag1_tag2.pdf"), size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
 
     override func setUp() {
         super.setUp()

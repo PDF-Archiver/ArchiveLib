@@ -4,3 +4,5 @@
 ArchiveLib.xcodeproj/xcshareddata
 ArchiveLib.xcworkspace
 ArchiveLib.playground
+.swiftpm/xcode/package.xcworkspace/xcuserdata
+.swiftpm/xcode/xcuserdata
