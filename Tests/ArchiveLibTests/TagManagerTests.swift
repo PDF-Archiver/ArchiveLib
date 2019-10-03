@@ -62,8 +62,8 @@ class TagManagerTests: XCTestCase {
         // calculate
         tagManager.remove("tag1")
         tagManager.remove("tag3")
-        let tag1 = tagManager.filterBy("tag1").first
-        let tag3 = tagManager.filterBy("tag3").first
+        let tag1 = tagManager.filter(by: "tag1").first
+        let tag3 = tagManager.filter(by: "tag3").first
 
         // assert
         XCTAssertEqual(tagManager.getAvailableTags(with: []).count, 2)

@@ -61,7 +61,7 @@ public enum DateParser {
         let lowercasedRaw = raw.lowercased()
 
         for mapping in mappings {
-            if var rawDates = lowercasedRaw.capturedGroups(withRegex: "([\\D]+|^)(\(mapping.regex))([\\D]+|$)") {
+            if let rawDates = lowercasedRaw.capturedGroups(withRegex: "([\\D]+|^)(\(mapping.regex))([\\D]+|$)") {
 
                 // get raw date from captured groups
                 let rawDate = String(rawDates[1])

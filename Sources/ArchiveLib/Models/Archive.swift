@@ -13,11 +13,10 @@ public protocol ArchiveDelegate: AnyObject {
     func archive(_ archive: Archive, didRemoveDocuments documents: Set<Document>)
 }
 
-public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
+public class Archive: DocumentManagerHandling, Logging {
 
     private let taggedDocumentManager = DocumentManager()
     private let untaggedDocumentManager = DocumentManager()
-    private let tagManager = TagManager()
 
     private let queue: OperationQueue = {
         let workerQueue = OperationQueue()
@@ -33,16 +32,22 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
     public init() {}
 
     // MARK: - TagManagerHandling implementation
-    public func getAvailableTags(with searchterms: [String]) -> Set<Tag> {
-        return tagManager.getAvailableTags(with: searchterms)
-    }
+    public func getAvailableTags(with searchterms: [String]) -> Set<String> {
 
-    public func removeTag(_ name: String) {
-        tagManager.remove(name)
-    }
+        // search in filename of the documents
+        let documents = taggedDocumentManager.filter(by: searchterms).union(untaggedDocumentManager.filter(by: searchterms))
 
-    public func add(_ name: String, count: Int = 1) -> Tag {
-        return tagManager.add(name, count: count)
+        // get a set of all document tags
+        let allDocumentTags = documents.reduce(into: Set<String>()) { result, document in
+            result.formUnion(document.tags)
+        }
+
+        // filter the tags that match any searchterm
+        let tags = allDocumentTags.filter { tag in
+            searchterms.contains { tag.contains($0) }
+        }
+
+        return tags
     }
 
     // MARK: - DocumentHandling implementation
@@ -74,13 +79,27 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
         }
 
         // filter by search terms
-        let termFilteredDocuments = documentManager.filterBy(searchterms)
+        let termFilteredDocuments = documentManager.filter(by: searchterms)
 
         return scopeFilteredDocuments.intersection(termFilteredDocuments)
     }
 
     public func add(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus, parse parsingOptions: ParsingOptions = []) {
-        let newDocument = Document(path: path, tagManager: tagManager, size: size, downloadStatus: downloadStatus, taggingStatus: status)
+
+        switch status {
+        case .untagged:
+            if let foundDocument = untaggedDocumentManager.filter(by: path.lastPathComponent).first {
+                update(foundDocument)
+                return
+            }
+        case .tagged:
+            if let foundDocument = taggedDocumentManager.filter(by: path.lastPathComponent).first {
+                update(foundDocument)
+                return
+            }
+        }
+
+        let newDocument = Document(id: UUID(), path: path, size: size, downloadStatus: downloadStatus, taggingStatus: status)
         switch status {
         case .tagged:
             taggedDocumentManager.add(newDocument)
@@ -108,14 +127,6 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
 
     public func remove(_ removableDocuments: Set<Document>) {
 
-        // remove tags
-        for document in removableDocuments {
-            for tag in document.tags {
-                tagManager.remove(tag.name)
-            }
-        }
-
-        // remove documents
         let taggedDocuments = removableDocuments.filter { $0.taggingStatus == .tagged }
         taggedDocumentManager.remove(taggedDocuments)
         untaggedDocumentManager.remove(removableDocuments.subtracting(taggedDocuments))
@@ -153,75 +164,35 @@ public class Archive: TagManagerHandling, DocumentManagerHandling, Logging {
     }
 
     public func update(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus, parse parsingOptions: ParsingOptions = []) -> Document {
-        let updatedDocument = Document(path: path, tagManager: tagManager, size: size, downloadStatus: downloadStatus, taggingStatus: status)
-        switch status {
-        case .tagged:
-            taggedDocumentManager.update(updatedDocument)
-        case .untagged:
 
-            if !parsingOptions.isEmpty && !isAlreadyParsing(document: updatedDocument) {
-                // parse the document content, which might updates the date and tags
-                queue.addOperation(ContentParseOperation(with: updatedDocument, options: parsingOptions))
-            }
-
-            // add the document to the untagged documents
-            untaggedDocumentManager.update(updatedDocument)
+        let documentId: UUID
+        if let foundDocument = get(scope: .all, searchterms: [path.lastPathComponent], status: status).first {
+            documentId = foundDocument.id
+        } else {
+            documentId = UUID()
         }
 
-        delegate?.archive(self, didAddDocument: updatedDocument)
-
+        let updatedDocument = Document(id: documentId, path: path, size: size, downloadStatus: downloadStatus, taggingStatus: status)
+        update(updatedDocument)
         return updatedDocument
     }
 
-    // MARK: - DocumentTagHandling implementation
-    public func add(tag: String, to document: Document) {
-
-        // test if tag already exists in document tags
-        if document.tags.filter({ $0.name == tag }).isEmpty {
-
-            // tag count update
-            let newTag = add(tag)
-
-            // add the new tag
-            document.tags.insert(newTag)
-
-            switch document.taggingStatus {
-            case .tagged:
-                taggedDocumentManager.update(document)
-            case .untagged:
-                untaggedDocumentManager.update(document)
-            }
-        }
-    }
-
-    public func remove(_ tag: Tag, from document: Document) {
-
-        // tag count update
-        removeTag(tag.name)
-
-        // add the new tag
-        document.tags.remove(tag)
-
+    private func update(_ document: Document, with parsingOptions: ParsingOptions) {
         switch document.taggingStatus {
         case .tagged:
             taggedDocumentManager.update(document)
         case .untagged:
+
+            if !parsingOptions.isEmpty && !isAlreadyParsing(document: document) {
+                // parse the document content, which might updates the date and tags
+                queue.addOperation(ContentParseOperation(with: document, options: parsingOptions))
+            }
+
+            // add the document to the untagged documents
             untaggedDocumentManager.update(document)
         }
-    }
 
-    public func update(_ newNames: Set<String>, on document: Document) {
-
-        let currentNames = Set(document.tags.map { $0.name })
-
-        for name in newNames.subtracting(currentNames) {
-            add(tag: name, to: document)
-        }
-
-        for name in currentNames.subtracting(newNames) {
-            guard let tag = document.tags.first(where: { $0.name == name }) else { fatalError("This should not be possible!") }
-            remove(tag, from: document)
-        }
+        delegate?.archive(self, didAddDocument: document)
     }
 
     // MARK: - Content parsing queue actions

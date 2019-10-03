@@ -43,7 +43,7 @@ class SearchTests: XCTestCase {
         index.allSearchElements.insert(element2)
 
         // act
-        let foundElements = index.filterBy("bill")
+        let foundElements = index.filter(by: "bill")
 
         // assert
         XCTAssertTrue(foundElements.contains(element1))
@@ -61,7 +61,7 @@ class SearchTests: XCTestCase {
         index.allSearchElements.insert(element2)
 
         // act
-        let foundElements = index.filterBy(["shirt", "bill"])
+        let foundElements = index.filter(by: ["shirt", "bill"])
 
         // assert
         XCTAssertFalse(foundElements.contains(element1))
@@ -80,7 +80,7 @@ class SearchTests: XCTestCase {
         var filteredElements = Set<TestElement>()
         self.measure {
             // Put the code you want to measure the time of here.
-            filteredElements = index.filterBy("description")
+            filteredElements = index.filter(by: "description")
         }
         XCTAssertEqual(filteredElements.capacity, 192)
     }
@@ -97,7 +97,7 @@ class SearchTests: XCTestCase {
         var filteredElements = Set<TestElement>()
         self.measure {
             // Put the code you want to measure the time of here.
-            filteredElements = index.filterBy("tag11")
+            filteredElements = index.filter(by: "tag11")
         }
         XCTAssertEqual(filteredElements.capacity, 3)
     }
