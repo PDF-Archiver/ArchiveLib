@@ -91,7 +91,7 @@ extension DocumentError: LocalizedError {
 }
 
 /// Main structure which contains a document.
-public class Document: Logging, Identifiable {
+public class Document: SystemLogging, Identifiable {
 
     // MARK: ArchiveLib essentials
 
