@@ -71,6 +71,20 @@ class DocumentTests: XCTestCase {
         XCTAssertNil(parsingOutput.tagNames)
     }
 
+    func testFilenameParsing4() {
+
+        // setup
+        let path = URL(fileURLWithPath: "~/Downloads/2019-09-02--gfwob abrechnung für 2018__hausgeldabrechung_steuer_wohnung.pdf")
+
+        // calculate
+        let parsingOutput = Document.parseFilename(path)
+
+        // assert
+        XCTAssertEqual(parsingOutput.date, dateFormatter.date(from: "2019-09-02"))
+        XCTAssertEqual(parsingOutput.specification, "gfwob abrechnung für 2018")
+        XCTAssertEqual(parsingOutput.tagNames, ["hausgeldabrechung", "steuer", "wohnung"])
+    }
+
     // MARK: - Test Document.getRenamingPath
 
     func testDocumentRenaming() {
