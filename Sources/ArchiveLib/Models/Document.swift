@@ -252,9 +252,9 @@ public class Document: SystemLogging, Identifiable {
 
         // parse the tags
         var tagNames: [String]?
-        if let raw = path.lastPathComponent.capturedGroups(withRegex: "__([\\w\\d_]+).[pdfPDF]{3}$") {
+        if let raw = path.deletingPathExtension().lastPathComponent.components(separatedBy: "__").last {
             // parse the tags of a document
-            tagNames = raw[0].components(separatedBy: "_")
+            tagNames = raw.components(separatedBy: "_")
         }
 
         return (date, specification, tagNames)
