@@ -44,7 +44,7 @@ public class Archive: DocumentManagerHandling, SystemLogging {
 
         // filter the tags that match any searchterm
         let tags = allDocumentTags.filter { tag in
-            searchterms.contains { tag.contains($0) }
+            searchterms.contains { tag.lowercased().contains($0.lowercased()) }
         }
 
         return tags

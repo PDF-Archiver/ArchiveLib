@@ -55,10 +55,18 @@ public extension Searcher {
     /// - Parameter searchTerms: Searchable object must contain all the specified search terms.
     /// - Returns: All objects which stickt to the constraints.
     func filter(by searchTerms: [String]) -> Set<Element> {
-        // all searchTerms must be machted
+
+        // all searchTerms must be machted, sorted by count to decrease the number of search elements
+        let sortedSearchTerms = searchTerms.sorted { $0.count > $1.count }
 
         var currentElements = allSearchElements
-        for searchTerm in searchTerms {
+        for searchTerm in sortedSearchTerms {
+
+            // skip all further iterations
+            if currentElements.isEmpty {
+                break
+            }
+
             currentElements = filter(by: searchTerm, currentElements)
         }
         return currentElements

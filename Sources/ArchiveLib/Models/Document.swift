@@ -252,7 +252,10 @@ public class Document: SystemLogging, Identifiable {
 
         // parse the tags
         var tagNames: [String]?
-        if let raw = path.deletingPathExtension().lastPathComponent.components(separatedBy: "__").last {
+        let filename = path.deletingPathExtension().lastPathComponent
+        let separator = "__"
+        if filename.contains(separator),
+            let raw = filename.components(separatedBy: separator).last {
             // parse the tags of a document
             tagNames = raw.components(separatedBy: "_")
         }
