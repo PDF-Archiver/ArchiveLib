@@ -68,6 +68,24 @@ class SearchTests: XCTestCase {
         XCTAssertTrue(foundElements.contains(element2))
     }
 
+    func testSearch3() {
+
+        // prepare
+        let element1 = TestElement(filename: "2018 05 12 kitchen table bill ikea")
+        let element2 = TestElement(filename: "2018 01 07 tom tailor shirt bill")
+
+        let index = TestSearcher()
+        index.allSearchElements.insert(element1)
+        index.allSearchElements.insert(element2)
+
+        // act
+        let foundElements = index.filter(by: ["Shirt", "bILl"])
+
+        // assert
+        XCTAssertFalse(foundElements.contains(element1))
+        XCTAssertTrue(foundElements.contains(element2))
+    }
+
     func testFilterPerformance1() {
 
         // create the search base
