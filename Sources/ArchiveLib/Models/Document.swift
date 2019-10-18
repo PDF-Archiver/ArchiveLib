@@ -255,7 +255,8 @@ public class Document: SystemLogging, Identifiable {
         let filename = path.deletingPathExtension().lastPathComponent
         let separator = "__"
         if filename.contains(separator),
-            let raw = filename.components(separatedBy: separator).last {
+            let raw = filename.components(separatedBy: separator).last,
+            !raw.isEmpty {
             // parse the tags of a document
             tagNames = raw.components(separatedBy: "_")
         }
