@@ -54,6 +54,8 @@ public class Archive: DocumentManagerHandling, SystemLogging {
     public var years: Set<String> {
         var years = Set<String>()
         for document in taggedDocumentManager.documents.value {
+            guard document.folder.isNumeric,
+                document.folder.count <= 4 else { continue }
             years.insert(document.folder)
         }
         return years
