@@ -42,12 +42,17 @@ public class Archive: DocumentManagerHandling, SystemLogging {
             result.formUnion(document.tags)
         }
 
-        // filter the tags that match any searchterm
-        let tags = allDocumentTags.filter { tag in
-            searchterms.contains { tag.lowercased().contains($0.lowercased()) }
+        let filteredTags: Set<String>
+        if searchterms.isEmpty {
+            filteredTags = allDocumentTags
+        } else {
+            // filter the tags that match any searchterm
+            filteredTags = allDocumentTags.filter { tag in
+                searchterms.contains { tag.lowercased().contains($0.lowercased()) }
+            }
         }
 
-        return tags
+        return filteredTags
     }
 
     // MARK: - DocumentHandling implementation

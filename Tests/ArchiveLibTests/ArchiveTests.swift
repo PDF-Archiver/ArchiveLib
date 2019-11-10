@@ -152,4 +152,46 @@ class ArchiveTests: XCTestCase {
         // assert
         XCTAssertNil(archive.get(scope: .all, searchterms: [], status: .untagged).first)
     }
+
+    func testTagSearch1() {
+
+        // setup
+        archive.add(from: URL(fileURLWithPath: "~/Downloads/2009/2009-05-12--aaa-example-description__tag1_tag2.pdf"), size: nil, downloadStatus: .local, status: .tagged)
+        archive.add(from: URL(fileURLWithPath: "~/Downloads/2010/2010-05-12--bbb-example-description__tag1_tag2.pdf"), size: nil, downloadStatus: .local, status: .tagged)
+        archive.add(from: URL(fileURLWithPath: "~/Downloads/2011/2011-05-12--ccc-example-description__tag1_tag2.pdf"), size: nil, downloadStatus: .local, status: .tagged)
+        archive.add(from: URL(fileURLWithPath: "~/Downloads/2010/2010-02-11--ddd-example-description__tag11_tag22.pdf"), size: nil, downloadStatus: .local, status: .untagged)
+        XCTAssertEqual(archive.get(scope: .all, searchterms: [], status: .tagged).count, 3)
+        XCTAssertEqual(archive.get(scope: .all, searchterms: [], status: .untagged).count, 1)
+
+        // calculate
+        let tags = archive.getAvailableTags(with: [])
+
+        // assert
+        XCTAssertEqual(tags.count, 4)
+        XCTAssertTrue(tags.contains("tag1"))
+        XCTAssertTrue(tags.contains("tag2"))
+        XCTAssertTrue(tags.contains("tag11"))
+        XCTAssertTrue(tags.contains("tag22"))
+    }
+
+    func testTagSearch2() {
+
+        // setup
+        archive.add(from: URL(fileURLWithPath: "~/Downloads/2009/2009-05-12--aaa-example-description__tag1_tag2.pdf"), size: nil, downloadStatus: .local, status: .tagged)
+        archive.add(from: URL(fileURLWithPath: "~/Downloads/2010/2010-05-12--bbb-example-description__tag1_tag2.pdf"), size: nil, downloadStatus: .local, status: .tagged)
+        archive.add(from: URL(fileURLWithPath: "~/Downloads/2011/2011-05-12--ccc-example-description__tag1_tag2.pdf"), size: nil, downloadStatus: .local, status: .tagged)
+        archive.add(from: URL(fileURLWithPath: "~/Downloads/2010/2010-02-11--ddd-example-description__tag11_tag22.pdf"), size: nil, downloadStatus: .local, status: .untagged)
+        XCTAssertEqual(archive.get(scope: .all, searchterms: [], status: .tagged).count, 3)
+        XCTAssertEqual(archive.get(scope: .all, searchterms: [], status: .untagged).count, 1)
+
+        // calculate
+        let tags = archive.getAvailableTags(with: ["2"])
+
+        // assert
+        XCTAssertEqual(tags.count, 2)
+        XCTAssertFalse(tags.contains("tag1"))
+        XCTAssertTrue(tags.contains("tag2"))
+        XCTAssertFalse(tags.contains("tag11"))
+        XCTAssertTrue(tags.contains("tag22"))
+    }
 }
