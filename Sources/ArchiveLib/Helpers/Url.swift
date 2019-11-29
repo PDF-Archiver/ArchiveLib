@@ -39,7 +39,9 @@ extension URL {
 
         return tagPlist.map { tag -> String in
             var newTag = tag
-            newTag.removeLast(2)
+            if newTag.suffix(2) == "\n0" {
+                newTag.removeLast(2)
+            }
             return newTag
         }
     }
