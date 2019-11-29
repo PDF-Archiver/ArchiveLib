@@ -159,21 +159,11 @@ public class Document: SystemLogging, Identifiable {
         let parsedFilename = Document.parseFilename(documentPath)
         tags = Set(parsedFilename.tagNames ?? [])
 
+        // add finder file tags
+        tags.formUnion(path.fileTags)
+
         // set the date
         date = parsedFilename.date
-
-        // get file tags https://stackoverflow.com/a/47340666
-        #if os(OSX)
-        var resource: AnyObject?
-        try? (path as NSURL).getResourceValue(&resource, forKey: URLResourceKey.tagNamesKey)
-
-        if let resource = resource,
-            let fileTags = resource as? [String] {
-            tags.formUnion(fileTags)
-        }
-        //#else
-        // TODO: add iOS implementation here
-        #endif
 
         // set the specification
         specification = parsedFilename.specification ?? ""
@@ -367,28 +357,14 @@ public class Document: SystemLogging, Identifiable {
         self.path = newFilepath
         self.taggingStatus = .tagged
 
-        // save tags
-        saveTagsToFilesystem()
+        // save file tags
+        path.fileTags = tags.sorted()
     }
 
     /// Save the tags of this document in the filesystem.
+    @available(*, deprecated, message: "Use 'url.fileTags' instead.")
     public func saveTagsToFilesystem() {
-
-        do {
-            // get document tags
-            let tags = self.tags.sorted()
-
-            // set file tags [https://stackoverflow.com/a/47340666]
-            #if os(OSX)
-            try (path as NSURL).setResourceValue(tags, forKey: URLResourceKey.tagNamesKey)
-            //#else
-            // TODO: add iOS implementation here
-            // SDK does not allow the access on iOS: https://developer.apple.com/documentation/foundation/urlresourcevalues/1792017-tagnames
-            #endif
-
-        } catch let error as NSError {
-            os_log("Could not set file: %@", log: Document.log, type: .error, error.description)
-        }
+        path.fileTags = tags.sorted()
     }
 
     private static func getFilenameDate(_ raw: String) -> (date: Date, rawDate: String)? {
