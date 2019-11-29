@@ -18,6 +18,7 @@ class DocumenTagTests: XCTestCase {
         tempUrl = url
     }
 
+    #if(OSX)
     func testReadFileTags() {
         guard let tempUrl = tempUrl else {
             XCTFail("Could not find ")
@@ -34,7 +35,9 @@ class DocumenTagTests: XCTestCase {
         let urlTags = tempUrl.fileTags
         XCTAssertEqual(urlTags, tags)
     }
+    #endif
 
+    #if(OSX)
     func testWriteFileTags() {
         guard var tempUrl = tempUrl else {
             XCTFail("Could not find ")
@@ -48,5 +51,21 @@ class DocumenTagTests: XCTestCase {
         // validate if url tags can be found
         let urlValues = try? tempUrl.resourceValues(forKeys: [.tagNamesKey])
         XCTAssertEqual(urlValues?.tagNames, tags)
+    }
+    #endif
+
+    func testReadWriteTags() {
+        guard var tempUrl = tempUrl else {
+            XCTFail("Could not find ")
+            return
+        }
+        let tags = ["bla", "foo"]
+
+        // setup all tags
+        tempUrl.fileTags = tags
+
+        // validate if url tags can be found
+        let urlTags = tempUrl.fileTags
+        XCTAssertEqual(urlTags, tags)
     }
 }
