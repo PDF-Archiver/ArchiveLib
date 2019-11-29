@@ -36,3 +36,6 @@ opt_in_rules:
   - unused_import
   - unused_private_declaration
   - yoda_condition
+identifier_name:
+  excluded:
+    - id

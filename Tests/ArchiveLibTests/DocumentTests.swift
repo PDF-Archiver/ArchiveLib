@@ -4,7 +4,7 @@
 //
 //  Created by Julian Kahnert on 30.11.18.
 //
-// swiftlint:disable force_try force_unwrapping
+// swiftlint:disable force_try force_unwrapping type_body_length
 
 @testable import ArchiveLib
 import XCTest
@@ -240,16 +240,6 @@ class DocumentTests: XCTestCase {
         // assert
         XCTAssertEqual(document1, document2)
         XCTAssertEqual(document1.hashValue, document2.hashValue)
-    }
-
-    func testCustomStringConvertible() {
-
-        // setup
-        let path = URL(fileURLWithPath: "~/Downloads/2018-05-12--example-description__tag1_tag2.pdf")
-        let document = Document(id: UUID(), path: path, size: defaaultSize, downloadStatus: defaultDownloadStatus, taggingStatus: .tagged)
-
-        // assert
-        XCTAssertEqual(document.description, path.lastPathComponent)
     }
 
     func testSearchable() {

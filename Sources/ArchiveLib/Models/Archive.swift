@@ -93,6 +93,7 @@ public class Archive: DocumentManagerHandling, SystemLogging {
 
     public func add(from path: URL, size: Int64?, downloadStatus: DownloadStatus, status: TaggingStatus, parse parsingOptions: ParsingOptions = []) {
 
+        // swiftlint:disable first_where
         switch status {
         case .untagged:
             if let foundDocument = untaggedDocumentManager.filter(by: path.lastPathComponent).first {
@@ -105,6 +106,7 @@ public class Archive: DocumentManagerHandling, SystemLogging {
                 return
             }
         }
+        // swiftlint:enable first_where
 
         let newDocument = Document(id: UUID(), path: path, size: size, downloadStatus: downloadStatus, taggingStatus: status)
         switch status {

@@ -12,6 +12,7 @@ extension URL {
 
     private static let itemUserTagsName = "com.apple.metadata:_kMDItemUserTags"
 
+    /// Finder file tags
     public var fileTags: [String] {
         get {
             // prefer native tagNames and 
@@ -54,7 +55,7 @@ extension URL {
     /// Get extended attribute.
     private func getExtendedAttribute(forName name: String, follow: Bool = false) throws -> Data {
         var options: Int32 = 0
-        if (!follow) {
+        if !follow {
             options = options | XATTR_NOFOLLOW
         }
         let data = try self.withUnsafeFileSystemRepresentation { fileSystemPath -> Data in
@@ -66,7 +67,7 @@ extension URL {
             var data = Data(count: length)
 
             // Retrieve attribute:
-            let result =  data.withUnsafeMutableBytes { [count = data.count] in
+            let result = data.withUnsafeMutableBytes { [count = data.count] in
                 getxattr(fileSystemPath, name, $0.baseAddress, count, 0, 0)
             }
             guard result >= 0 else { throw URL.posixError(errno) }
@@ -78,7 +79,7 @@ extension URL {
     /// Set extended attribute.
     func setExtendedAttribute(data: Data, forName name: String, follow: Bool = false) throws {
         var options: Int32 = 0
-        if (!follow) {
+        if !follow {
             options = options | XATTR_NOFOLLOW
         }
         try self.withUnsafeFileSystemRepresentation { fileSystemPath in
@@ -91,7 +92,8 @@ extension URL {
 
     /// Helper function to create an NSError from a Unix errno.
     private static func posixError(_ err: Int32) -> NSError {
-        return NSError(domain: NSPOSIXErrorDomain, code: Int(err),
+        return NSError(domain: NSPOSIXErrorDomain,
+                       code: Int(err),
                        userInfo: [NSLocalizedDescriptionKey: String(cString: strerror(err))])
     }
 }
