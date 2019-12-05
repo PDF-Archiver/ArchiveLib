@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// MARK: Several string helpers.
+/// Several string helpers.
 public extension String {
 
     /// Slugify the string and seperate each part.

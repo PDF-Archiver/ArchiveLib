@@ -382,7 +382,7 @@ public class Document: SystemLogging, Identifiable {
     }
 }
 
-extension Document: Hashable, Comparable, CustomStringConvertible {
+extension Document: Hashable, Comparable {
 
     public static func < (lhs: Document, rhs: Document) -> Bool {
 
@@ -405,9 +405,6 @@ extension Document: Hashable, Comparable, CustomStringConvertible {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-
-    // TODO: remove this
-    public var description: String { return filename }
 }
 
 extension Document: Searchable {

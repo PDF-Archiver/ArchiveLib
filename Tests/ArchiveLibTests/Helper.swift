@@ -4,6 +4,7 @@
 //
 //  Created by Julian Kahnert on 29.11.19.
 //
+// swiftlint:disable force_try
 
 import Foundation
 
