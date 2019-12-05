@@ -35,20 +35,30 @@ extension URL {
     }
 
     private func getFileTags() -> [String] {
-        guard let data = try? self.getExtendedAttribute(forName: URL.itemUserTagsName),
-            let tagPlist = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String] else { return [] }
+        var tags = [String]()
+        if let data = try? self.getExtendedAttribute(forName: URL.itemUserTagsName) {
+            if let tagPlist = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String] {
 
-        return tagPlist.map { tag -> String in
-            var newTag = tag
-            if newTag.suffix(2) == "\n0" {
-                newTag.removeLast(2)
+                tags = tagPlist.map { tag -> String in
+                    var newTag = tag
+                    if newTag.suffix(2) == "\n0" {
+                        newTag.removeLast(2)
+                    }
+                    return newTag
+                }
+
+            } else if let newTags = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? [String] {
+
+                tags = newTags
+
             }
-            return newTag
         }
+        return tags
     }
 
+    @available(OSX 10.13, *)
     private func setFileTags(_ fileTags: [String]) {
-        guard let data = try? PropertyListEncoder().encode(fileTags) else { return }
+        guard let data = try? NSKeyedArchiver.archivedData(withRootObject: fileTags, requiringSecureCoding: false) else { return }
         try? setExtendedAttribute(data: data, forName: URL.itemUserTagsName)
     }
 
