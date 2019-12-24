@@ -228,7 +228,7 @@ public class Document: Logging {
         // parse the specification
         var specification: String?
 
-        if var raw = path.lastPathComponent.capturedGroups(withRegex: "--([\\w\\d-]+)__") {
+        if let raw = path.lastPathComponent.capturedGroups(withRegex: "--([\\w\\d-]+)__") {
 
             // try to parse the real specification from scheme
             specification = raw[0]
@@ -256,7 +256,7 @@ public class Document: Logging {
 
         // parse the tags
         var tagNames: [String]?
-        if var raw = path.lastPathComponent.capturedGroups(withRegex: "__([\\w\\d_]+).[pdfPDF]{3}$") {
+        if let raw = path.lastPathComponent.capturedGroups(withRegex: "__([\\w\\d_]+).[pdfPDF]{3}$") {
             // parse the tags of a document
             tagNames = raw[0].components(separatedBy: "_")
         }
