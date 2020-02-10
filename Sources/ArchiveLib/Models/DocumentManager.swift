@@ -1,6 +1,6 @@
 //
 //  UntaggedDocumentManager.swift
-//  ArchiveLib-iOS
+//  ArchiveLib
 //
 //  Created by Julian Kahnert on 11.12.18.
 //
@@ -23,14 +23,20 @@ public protocol DocumentManagerHandling: AnyObject {
 
 class DocumentManager: SystemLogging {
 
-    var documents = Atomic(Set<Document>())
+
+    private(set) var documents = Atomic(Set<Document>())
+    private(set) var tagIndex = Atomic(TagIndex<String>())
 
     func add(_ addedDocument: Document) {
         add(Set([addedDocument]))
+        tagIndex.mutate { $0.add(addedDocument.tags) }
     }
 
     func add(_ addedDocuments: Set<Document>) {
         documents.mutate { $0.formUnion(addedDocuments) }
+        for addedDocument in addedDocuments {
+            tagIndex.mutate { $0.add(addedDocument.tags) }
+        }
     }
 
     func remove(_ removableDocument: Document) {

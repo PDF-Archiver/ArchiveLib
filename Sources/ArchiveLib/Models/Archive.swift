@@ -216,6 +216,14 @@ public class Archive: DocumentManagerHandling, SystemLogging {
         guard let operations = queue.operations as? [ContentParseOperation] else { fatalError("Could not get operations.") }
         return operations.contains { $0.document == document }
     }
+
+    // MARK: Tag Index
+
+    /// Get all tags that are used in other documents with the given `tagname`.
+    /// - Parameter tagname: Given tag name.
+    public func getSimilarTags(for tagname: String) -> Set<String> {
+        return taggedDocumentManager.tagIndex.value[tagname]
+    }
 }
 
 public enum ContentType: Equatable {

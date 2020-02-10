@@ -1,6 +1,6 @@
 //
 //  ContentParseOperation.swift
-//  ArchiveLib-iOS
+//  ArchiveLib
 //
 //  Created by Julian Kahnert on 10.08.19.
 //

@@ -1,6 +1,6 @@
 //
 //  DocumentTests.swift
-//  ArchiveLib-iOS Tests
+//  ArchiveLib Tests
 //
 //  Created by Julian Kahnert on 30.11.18.
 //

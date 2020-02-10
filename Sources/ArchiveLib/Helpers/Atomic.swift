@@ -9,7 +9,7 @@
 import Foundation
 
 final class Atomic<A> {
-    private let queue = DispatchQueue(label: "Atomic serial queue")
+    private let queue = DispatchQueue(label: UUID().uuidString)
     private var _value: A
     init(_ value: A) {
         self._value = value
