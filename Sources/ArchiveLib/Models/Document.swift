@@ -8,7 +8,7 @@
 import Foundation
 import os.log
 #if os(OSX)
-import Quartz
+import Quartz.PDFKit
 #else
 import PDFKit
 #endif

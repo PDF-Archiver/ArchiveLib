@@ -26,7 +26,7 @@ let package = Package(
             name: "ArchiveLib",
             dependencies: [],
             linkerSettings: [
-                .linkedFramework("Quartz")
+                .linkedFramework("PDFKit")
             ]
         ),
         .testTarget(

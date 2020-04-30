@@ -6,7 +6,11 @@
 //
 
 import Foundation
+#if os(OSX)
 import Quartz.PDFKit
+#else
+import PDFKit
+#endif
 
 // Source Code from: https://github.com/amyspark/xattr
 extension URL {
@@ -31,25 +35,29 @@ extension URL {
                 tags.append(contentsOf: tagNames)
             }
             #else
-            tags.append(getFileTags())
+            tags.append(contentsOf: getFileTags())
             #endif
             
             return tags
         }
         set {
+            let tags = newValue
 
             // write pdf document attributes
-            guard let document = PDFDocument(url: self),
-                var docAttrib = document.documentAttributes else { return }
-            docAttrib[PDFDocumentAttribute.keywordsAttribute] = newValue
-            document.documentAttributes = docAttrib
-            document.write(to: self)
+            if let document = PDFDocument(url: self),
+                var docAttrib = document.documentAttributes,
+                let currentAttrib = docAttrib[PDFDocumentAttribute.keywordsAttribute] as? [String],
+                currentAttrib != tags {
+                docAttrib[PDFDocumentAttribute.keywordsAttribute] = newValue
+                document.documentAttributes = docAttrib
+                document.write(to: self)
+            }
             
             #if os(OSX)
             // https://stackoverflow.com/a/47340666
-            try? (self as NSURL).setResourceValue(newValue, forKey: URLResourceKey.tagNamesKey)
+            try? (self as NSURL).setResourceValue(tags, forKey: URLResourceKey.tagNamesKey)
             #else
-            setFileTags(newValue)
+            setFileTags(tags)
             #endif
         }
     }
