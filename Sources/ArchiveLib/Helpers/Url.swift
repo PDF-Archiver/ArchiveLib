@@ -1,11 +1,12 @@
 //
-//  File.swift
+//  Url.swift
 //  
 //
 //  Created by Julian Kahnert on 29.11.19.
 //
 
 import Foundation
+import Quartz.PDFKit
 
 // Source Code from: https://github.com/amyspark/xattr
 extension URL {
@@ -15,16 +16,35 @@ extension URL {
     /// Finder file tags
     public var fileTags: [String] {
         get {
+            var tags = [String]()
+            
+            if let documentAttributes = PDFDocument(url: self)?.documentAttributes,
+                let keywords = documentAttributes[PDFDocumentAttribute.keywordsAttribute] as? [String] {
+                tags.append(contentsOf: keywords)
+            }
+            
             // prefer native tagNames and 
             #if os(OSX)
             // https://stackoverflow.com/a/47340666
-            let resourceValues = try? self.resourceValues(forKeys: [.tagNamesKey])
-            return resourceValues?.tagNames ?? []
+            if let resourceValues = try? self.resourceValues(forKeys: [.tagNamesKey]),
+                let tagNames = resourceValues.tagNames {
+                tags.append(contentsOf: tagNames)
+            }
             #else
-            return getFileTags()
+            tags.append(getFileTags())
             #endif
+            
+            return tags
         }
         set {
+
+            // write pdf document attributes
+            guard let document = PDFDocument(url: self),
+                var docAttrib = document.documentAttributes else { return }
+            docAttrib[PDFDocumentAttribute.keywordsAttribute] = newValue
+            document.documentAttributes = docAttrib
+            document.write(to: self)
+            
             #if os(OSX)
             // https://stackoverflow.com/a/47340666
             try? (self as NSURL).setResourceValue(newValue, forKey: URLResourceKey.tagNamesKey)
