@@ -381,12 +381,12 @@ public class Document: Logging {
     /// Save the tags of this document in the filesystem.
     public func saveTagsToFilesystem() {
 
-        do {
-            // get document tags
-            let tags = self.tags
-                .map { $0.name }
-                .sorted()
+        // get document tags
+        let tags = self.tags
+            .map { $0.name }
+            .sorted()
 
+        do {
             // set file tags [https://stackoverflow.com/a/47340666]
             #if os(OSX)
             try (path as NSURL).setResourceValue(tags, forKey: URLResourceKey.tagNamesKey)
@@ -394,10 +394,16 @@ public class Document: Logging {
             // TODO: add iOS implementation here
             // SDK does not allow the access on iOS: https://developer.apple.com/documentation/foundation/urlresourcevalues/1792017-tagnames
             #endif
-
         } catch let error as NSError {
             os_log("Could not set file: %@", log: Document.log, type: .error, error.description)
         }
+
+        // write pdf document attributes
+        guard let document = PDFDocument(url: self.path),
+            var docAttrib = document.documentAttributes else { return }
+        docAttrib[PDFDocumentAttribute.keywordsAttribute] = tags
+        document.documentAttributes = docAttrib
+        document.write(to: self.path)
     }
 
     private static func getFilenameDate(_ raw: String) -> (date: Date, rawDate: String)? {
