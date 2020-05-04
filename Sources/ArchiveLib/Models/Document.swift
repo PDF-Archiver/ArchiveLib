@@ -400,9 +400,12 @@ public class Document: Logging {
 
         // write pdf document attributes
         guard let document = PDFDocument(url: self.path),
-            var docAttrib = document.documentAttributes,
-            let currentAttrib = docAttrib[PDFDocumentAttribute.keywordsAttribute] as? [String],
-            currentAttrib != tags else { return }
+            var docAttrib = document.documentAttributes else { return }
+        
+        let currentAttrib = (docAttrib[PDFDocumentAttribute.keywordsAttribute] as? [String]) ?? []
+        
+        guard currentAttrib != tags else { return }
+
         docAttrib[PDFDocumentAttribute.keywordsAttribute] = tags
         document.documentAttributes = docAttrib
         document.write(to: self.path)
