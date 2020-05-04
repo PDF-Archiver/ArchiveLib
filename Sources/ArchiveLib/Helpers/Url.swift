@@ -45,12 +45,17 @@ extension URL {
 
             // write pdf document attributes
             if let document = PDFDocument(url: self),
-                var docAttrib = document.documentAttributes,
-                let currentAttrib = docAttrib[PDFDocumentAttribute.keywordsAttribute] as? [String],
-                currentAttrib != tags {
-                docAttrib[PDFDocumentAttribute.keywordsAttribute] = newValue
-                document.documentAttributes = docAttrib
-                document.write(to: self)
+                var docAttrib = document.documentAttributes {
+                
+                // get current document tags
+                let currentAttrib = (docAttrib[PDFDocumentAttribute.keywordsAttribute] as? [String]) ?? []
+                
+                // write new document tags if needed
+                if currentAttrib != tags {
+                    docAttrib[PDFDocumentAttribute.keywordsAttribute] = newValue
+                    document.documentAttributes = docAttrib
+                    document.write(to: self)
+                }
             }
             
             #if os(OSX)
