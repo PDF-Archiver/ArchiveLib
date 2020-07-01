@@ -423,3 +423,15 @@ extension Document: CustomComparable {
         throw SortDescriptorError.invalidKey
     }
 }
+
+#if DEBUG
+extension Document {
+    public static func create() -> Document {
+        Document(id: UUID(),
+                 path: URL(string: "~/test.pdf")!,
+                 size: Int64.random(in: 0..<512000),
+                 downloadStatus: DownloadStatus.iCloudDrive,
+                 taggingStatus: TaggingStatus.untagged)
+    }
+}
+#endif
